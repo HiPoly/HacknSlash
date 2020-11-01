@@ -30,4 +30,23 @@ public class PlayerAnim : MonoBehaviour
     public void Dodge2(){
     anim.SetTrigger(AnimationTags.dodge2trigger);
     }
+    public void Slide(){
+        anim.SetTrigger(AnimationTags.slidetrigger);
+    }
+    public void Sweep()
+    {
+        anim.SetTrigger(AnimationTags.sweeptrigger);
+    }
+    public void Hold()
+    {
+        anim.SetTrigger(AnimationTags.holdtrigger);
+    }
+    public void Bounce()
+    {
+        anim.SetTrigger(AnimationTags.bouncetrigger);
+    }
+    public void Charge()
+    {
+        anim.SetTrigger(AnimationTags.chargetrigger);
+    }
 }

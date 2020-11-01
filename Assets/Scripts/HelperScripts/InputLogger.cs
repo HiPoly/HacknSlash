@@ -7,7 +7,7 @@ public class InputLogger : MonoBehaviour
     //Ask Jacob how to store these inputs to a list efficiently and potentially print them in a practice range with representative icons
     //including how to make bindable keys in control settings
     //and how to tell forward from back when inputting (I can probably work this one out)
-    private string[] InputList;
+    private List<string> InputList;
     private bool FacingRight;
 
     private void Start()
@@ -17,11 +17,7 @@ public class InputLogger : MonoBehaviour
 
     void Update()
     {
-        //CheckifFacingRight
-        if (GameObject.FindWithTag(Tags.playertag).transform.rotation < 0){
-            FacingRight = true;}
-        else{
-            FacingRight = false;}
+        //need something to remove expired or excess inputs aswell
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -33,21 +29,11 @@ public class InputLogger : MonoBehaviour
         }
         if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
         {
-            if (FacingRight){
 
-            }
-            else{
-
-            }
         }
         if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
         {
-            if (FacingRight){
 
-            }
-            else{
-
-            }
         }
         if (Input.GetAxisRaw(Axis.verticalaxis) < 0)
         {

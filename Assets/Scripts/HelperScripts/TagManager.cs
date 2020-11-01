@@ -3,18 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationTags 
-{
+{   //movements
+    public const string idle = "Idle";
     public const string moving = "Moving";
-
+    //dodges
+    public const string dodge1trigger = "Dodge1";
+    public const string dodge2trigger = "Dodge2";
+    public const string slidetrigger = "Slide";
+    public const string recoverytrigger = "Recovery";
+    //blocks
+    public const string blocktrigger = "Block";
+    public const string parrytrigger = "Parry";
+    //attacks
     public const string basic1trigger = "Basic1";
     public const string basic2trigger = "Basic2";
     public const string basic3trigger = "Basic3";
+    //special attacks
+    public const string sweeptrigger = "Sweep";
+    public const string holdtrigger = "Hold";
+    public const string bouncetrigger = "Bounce";
+    public const string chargetrigger = "Charge";
 
-    public const string dodge1trigger = "Dodge1";
-    public const string dodge2trigger = "Dodge2";
-
-    public const string idle = "Idle";
-
+    //Statuses
     public const string knockdowntrigger = "KnockDown";
     public const string standuptrigger = "StandUp";
     public const string hittrigger = "Hit";

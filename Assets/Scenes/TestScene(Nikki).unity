@@ -452,6 +452,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1374545726440539022, guid: a15e8629e4198c04fb0ffbfba740f740, type: 3}
+      propertyPath: DashSpeed
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a15e8629e4198c04fb0ffbfba740f740, type: 3}
 --- !u!1001 &7318932922909144441
@@ -534,7 +538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1.5
-  AttackDistance: 1.2
+  AttackDistance: 1.6
   ChasePlayerAfterAttack: 1
 --- !u!114 &7318932922909144445
 MonoBehaviour:

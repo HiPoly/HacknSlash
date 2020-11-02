@@ -17,13 +17,14 @@ public enum DodgeComboState{
 
 public class PlayerAttack : MonoBehaviour
 {
+    [SerializeField]
     private PlayerAnim PlayerAnim;
     private Rigidbody rb;
     private bool Grounded;
     //Timers
     private bool activateComboTimerToReset;
     private bool activateDodgeTimerToReset;
-    private float DefaultComboTimer = 0.4f;
+    private float DefaultComboTimer = 0.8f;
     private float CurrentComboTimer;
     private float DefaultDodgeTimer = 0.8f;
     private float CurrentDodgeTimer;
@@ -33,6 +34,7 @@ public class PlayerAttack : MonoBehaviour
 
     [SerializeField] private float DashSpeed;
     [SerializeField] private float DashTime;
+    [SerializeField] private float StartDashTime;
 
     private void Start()
     {
@@ -42,6 +44,7 @@ public class PlayerAttack : MonoBehaviour
         CurrentDodgeState = DodgeComboState.None;
         rb = GetComponent<Rigidbody>();
         Grounded = true;
+        DashTime = StartDashTime;
     }
     private void Update()
     {
@@ -68,9 +71,10 @@ public class PlayerAttack : MonoBehaviour
                 PlayerAnim.Bounce();
                 return;
             }//Bounce
-            
+
             //check if basic combo finished
-            if (CurrentComboState == BasicComboState.Basic3){
+            if (CurrentComboState >= BasicComboState.Basic3)
+            {
                 return;
             }
 
@@ -96,10 +100,12 @@ public class PlayerAttack : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {   // check if dodge sequence completed
-            if (CurrentDodgeState == DodgeComboState.Dodge2){
+            if (CurrentDodgeState == DodgeComboState.Dodge2)
+            {
                 return;
             }
-            if (Input.GetAxis(Axis.horizontalaxis) > 0 && (Input.GetAxis(Axis.horizontalaxis) < 0)){
+            if (Input.GetAxis(Axis.horizontalaxis) > 0 && (Input.GetAxis(Axis.horizontalaxis) < 0))
+            {
                 PlayerAnim.Slide();
                 return;
             }
@@ -109,26 +115,30 @@ public class PlayerAttack : MonoBehaviour
 
             if (CurrentDodgeState == DodgeComboState.Dodge1)
             {
-                //PlayerAnim.Dodge1();
-                if (Input.GetAxis(Axis.horizontalaxis) < 0){
+                PlayerAnim.Dodge1();
+                if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+                {
                     rb.velocity = Vector3.left * DashSpeed * Time.deltaTime;
-                    Debug.Log("I am dashing");
                 }
-                else if (Input.GetAxis(Axis.horizontalaxis) > 0){
+                else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
+                {
                     rb.velocity = Vector3.right * DashSpeed * Time.deltaTime;
                 }
-            if (CurrentDodgeState == DodgeComboState.Dodge2)
-                PlayerAnim.Dodge2();
-                if (Input.GetAxisRaw(Axis.horizontalaxis) < 0){
-                    rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
-                }
-                else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0){
-                    rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
-                }
-
+                if (CurrentDodgeState == DodgeComboState.Dodge2)
+                {
+                    PlayerAnim.Dodge2();
+                    if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+                    {
+                        rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
+                    }
+                    else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
+                    {
+                        rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
+                    }
                 }
             }
         }
+    }
     void ResetComboState(){
         if (activateComboTimerToReset)
         {

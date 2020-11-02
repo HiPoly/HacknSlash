@@ -11,9 +11,8 @@ public class PlayerAnim : MonoBehaviour
         anim = GetComponent<Animator>();
         
     }
-    public void Walk(bool Moving)
-    {
-        anim.SetBool(AnimationTags.moving, Moving);
+    public void Walk(bool moving){
+        anim.SetBool(AnimationTags.movingbool, moving);
     }
     //Basic Attacks 1/2/3
     public void Basic1(){

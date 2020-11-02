@@ -49,13 +49,13 @@ public class EnemyMovement : MonoBehaviour
 
             if(myBody.velocity.sqrMagnitude != 0)
             {
-                EnemyAnim.Walk(true);
+                EnemyAnim.Walk();
             }
         }
         else if (Vector3.Distance(transform.position, playerTarget.position) <= AttackDistance)
         {
             myBody.velocity = Vector3.zero;
-            EnemyAnim.Walk(false);
+            EnemyAnim.Walk();
             FollowPlayer = false;
             AttackPlayer = true;
         }

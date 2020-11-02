@@ -24,9 +24,9 @@ public class EnemyAnim : MonoBehaviour
             anim.SetTrigger(AnimationTags.basic3trigger);
         }
     }
-    public void Walk(bool Moving)
+    public void Walk()
     {
-        anim.SetBool(AnimationTags.moving, Moving);
+        anim.SetBool(AnimationTags.movingbool, true);
     }
     public void Idle()
     {

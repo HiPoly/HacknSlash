@@ -19,6 +19,15 @@ public class PauseMenu : MonoBehaviour
     [SerializeField]
     private string TitleScene;
 
+    //moves list Game Object
+
+    [SerializeField]
+    private GameObject MovesList;
+
+    [SerializeField]
+    private GameObject Buttons;
+    
+
 
 
     // Start is called before the first frame update
@@ -55,6 +64,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0;
         thePauseMenu.SetActive(true);
         GameIsPaused = true;
+        Buttons.SetActive(true);
 
     }
 
@@ -65,21 +75,38 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         thePauseMenu.SetActive(false);
         GameIsPaused = false;
+        MovesList.SetActive(false);
 
     }
 
 
 
     //Menu Button behaviours
+
+    //Unpause as a button
     public void ResumeGame()
     {
         PauseMenuOff();
     }
 
 
+    //veiw Moves List
+    public void MovesListOn()
+    {
+        MovesList.SetActive(true);
+        Buttons.SetActive(false);
+    }
+
+    //stop veiwing Moves List
+    public void MovesListOff()
+    {
+        MovesList.SetActive(false);
+        Buttons.SetActive(true);
+    }
 
 
 
+    //return to title/main menu
     public void TitleScreen()
     {
 

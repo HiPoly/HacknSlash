@@ -8,11 +8,13 @@ public enum BasicComboState{
     Basic1,
     Basic2,
     Basic3,
+    Fill
 }
 public enum DodgeComboState{
     None,
     Dodge1,
     Dodge2,
+    Fill
 }
 
 public class PlayerAttack : MonoBehaviour
@@ -26,15 +28,15 @@ public class PlayerAttack : MonoBehaviour
     private bool activateDodgeTimerToReset;
     private float DefaultComboTimer = 0.8f;
     private float CurrentComboTimer;
-    private float DefaultDodgeTimer = 0.8f;
+    private float DefaultDodgeTimer = 2.0f;
     private float CurrentDodgeTimer;
     //Enums
     private BasicComboState CurrentComboState;
     private DodgeComboState CurrentDodgeState;
 
     [SerializeField] private float DashSpeed;
-    [SerializeField] private float DashTime;
-    [SerializeField] private float StartDashTime;
+    [SerializeField] private float StartDashTime = 1.0f;
+    [SerializeField] private float DashTime = 1.0f;
 
     private void Start()
     {
@@ -56,19 +58,15 @@ public class PlayerAttack : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //SpecialMoveChecks
-            if (Input.GetAxisRaw(Axis.horizontalaxis) > 0 && (Input.GetAxisRaw(Axis.verticalaxis) < 0))
-            {
+            if (Input.GetAxisRaw(Axis.horizontalaxis) > 0 && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
                 PlayerAnim.Sweep();
-                return;
-            }//Sweep
-            if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
-            {
+                return;}//Sweep
+            if (Input.GetAxisRaw(Axis.horizontalaxis) > 0){
                 PlayerAnim.Hold();
                 return;
             }//Air-Hold
             if (Input.GetAxisRaw(Axis.verticalaxis) < 0 && (!Grounded))
-            {
-                PlayerAnim.Bounce();
+            {PlayerAnim.Bounce();
                 return;
             }//Bounce
 
@@ -95,17 +93,17 @@ public class PlayerAttack : MonoBehaviour
                 if (CurrentComboState == BasicComboState.Basic3)
                 {
                     PlayerAnim.Basic3();
+
                 }
+
             }
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {   // check if dodge sequence completed
-            if (CurrentDodgeState == DodgeComboState.Dodge2)
-            {
+            if (CurrentDodgeState >= DodgeComboState.Dodge2){
                 return;
             }
-            if (Input.GetAxis(Axis.horizontalaxis) > 0 && (Input.GetAxis(Axis.horizontalaxis) < 0))
-            {
+            if (Input.GetAxis(Axis.horizontalaxis) > 0 && (Input.GetAxis(Axis.horizontalaxis) < 0)){
                 PlayerAnim.Slide();
                 return;
             }
@@ -124,17 +122,17 @@ public class PlayerAttack : MonoBehaviour
                 {
                     rb.velocity = Vector3.right * DashSpeed * Time.deltaTime;
                 }
-                if (CurrentDodgeState == DodgeComboState.Dodge2)
+            }
+            if (CurrentDodgeState == DodgeComboState.Dodge2)
+            {
+                PlayerAnim.Dodge2();
+                if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
                 {
-                    PlayerAnim.Dodge2();
-                    if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
-                    {
-                        rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
-                    }
-                    else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
-                    {
-                        rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
-                    }
+                    rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
+                }
+                else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
+                {
+                    rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
                 }
             }
         }
@@ -153,7 +151,7 @@ public class PlayerAttack : MonoBehaviour
         if (activateDodgeTimerToReset)
         {
             CurrentComboTimer -= Time.deltaTime;
-            if (CurrentComboTimer <= 0f)
+            if (CurrentDodgeTimer <= 0f)
             {
                 CurrentDodgeState = DodgeComboState.None;
                 activateDodgeTimerToReset = false;

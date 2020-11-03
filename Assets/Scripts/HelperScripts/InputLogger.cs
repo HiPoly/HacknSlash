@@ -8,16 +8,15 @@ public class InputLogger : MonoBehaviour
     //including how to make bindable keys in control settings
     //and how to tell forward from back when inputting (I can probably work this one out)
 
-    private List<string> InputList = new List<string>()
-    {" "};
+    private List<string> InputList = new List<string>() {" "};
     private bool FacingRight;
+    private int ListLength;
+    [SerializeField] private int Intendedlength = 6;
+
 
     private void Start()
     {
         FacingRight = true;
-        
-        InputList = new List<string>()
-        {" "};
     }
 
     void Update()
@@ -56,5 +55,13 @@ public class InputLogger : MonoBehaviour
         if (Input.GetAxisRaw(Axis.verticalaxis) > 0){
             InputList.Insert(0, "Up");
         }
+
+        //check if list length is greater than x then reduce to correct size from back end.
+        ListLength = InputList.Count;
+        if (ListLength >= Intendedlength) 
+        {
+            InputList.RemoveAt(Intendedlength - 1);
+        }
+        //check if input has been listed for a long period of time and remove expired values.
     }
 }

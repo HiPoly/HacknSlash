@@ -14,6 +14,9 @@ public class PlayerAnim : MonoBehaviour
     public void Walk(bool moving){
         anim.SetBool(AnimationTags.movingbool, moving);
     }
+    public void Crouch(bool crouching){
+        anim.SetBool(AnimationTags.crouchingbool, crouching);
+    }
     //Basic Attacks 1/2/3
     public void Basic1(){
         anim.SetTrigger(AnimationTags.basic1trigger);}
@@ -32,20 +35,16 @@ public class PlayerAnim : MonoBehaviour
     public void Slide(){
         anim.SetTrigger(AnimationTags.slidetrigger);
     }
-    public void Sweep()
-    {
+    public void Sweep(){
         anim.SetTrigger(AnimationTags.sweeptrigger);
     }
-    public void Hold()
-    {
+    public void Hold(){
         anim.SetTrigger(AnimationTags.holdtrigger);
     }
-    public void Bounce()
-    {
+    public void Bounce(){
         anim.SetTrigger(AnimationTags.bouncetrigger);
     }
-    public void Charge()
-    {
+    public void Charge(){
         anim.SetTrigger(AnimationTags.chargetrigger);
     }
 }

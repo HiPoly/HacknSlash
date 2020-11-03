@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     {
         RotatePlayer();
         AnimatePlayerWalk();
+        AnimateCrouch();
     }
     void FixedUpdate()
     {
@@ -51,11 +52,21 @@ public class PlayerMovement : MonoBehaviour
     }
     void AnimatePlayerWalk()
     {
-        if (Input.GetKeyDown(KeyCode.A) || (Input.GetKeyDown(KeyCode.D) && Input.GetAxisRaw(Axis.verticalaxis) >= 0)) {
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.D)) {
             playerAnim.Walk(true);
         }
         else {
             playerAnim.Walk(false);
         }
     }
+    void AnimateCrouch()
+    {
+        if (Input.GetKey(KeyCode.S))
+        {
+            playerAnim.Crouch(true);
+        }
+        else
+            playerAnim.Crouch(false);
+    }
+
 } // class

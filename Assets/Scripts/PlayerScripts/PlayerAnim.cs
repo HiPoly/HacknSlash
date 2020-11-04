@@ -11,21 +11,48 @@ public class PlayerAnim : MonoBehaviour
         anim = GetComponent<Animator>();
         
     }
+
+    //Movement Walking/Crouching
     public void Walk(bool moving){
         anim.SetBool(AnimationTags.movingbool, moving);
     }
     public void Crouch(bool crouching){
         anim.SetBool(AnimationTags.crouchingbool, crouching);
     }
+
+    //Reactions Hit/Death
+    public void Hit()
+    {
+        anim.SetTrigger(AnimationTags.hittrigger);
+    }
+    public void Death()
+    {
+        anim.SetTrigger(AnimationTags.deathtrigger);
+    }
+
+    //Special Attacks Sweep/Hold/Charge/Bounce
+    public void Sweep(){
+        anim.SetTrigger(AnimationTags.sweeptrigger);
+    }
+    public void Hold(){
+        anim.SetTrigger(AnimationTags.holdtrigger);
+    }
+    public void Charge(){
+        anim.SetTrigger(AnimationTags.chargetrigger);
+    }
+    public void Bounce(){
+        anim.SetTrigger(AnimationTags.bouncetrigger);
+    }
+
     //Basic Attacks 1/2/3
     public void Basic1(){
         anim.SetTrigger(AnimationTags.basic1trigger);}
     public void Basic2(){
         anim.SetTrigger(AnimationTags.basic2trigger);}
     public void Basic3(){
-        anim.SetTrigger(AnimationTags.basic1trigger);}
+        anim.SetTrigger(AnimationTags.basic3trigger);}
 
-    //Dodges 1/2
+    //Dodges Step/Roll
     public void Dodge1(){
     anim.SetTrigger(AnimationTags.dodge1trigger);
     }
@@ -34,17 +61,5 @@ public class PlayerAnim : MonoBehaviour
     }
     public void Slide(){
         anim.SetTrigger(AnimationTags.slidetrigger);
-    }
-    public void Sweep(){
-        anim.SetTrigger(AnimationTags.sweeptrigger);
-    }
-    public void Hold(){
-        anim.SetTrigger(AnimationTags.holdtrigger);
-    }
-    public void Bounce(){
-        anim.SetTrigger(AnimationTags.bouncetrigger);
-    }
-    public void Charge(){
-        anim.SetTrigger(AnimationTags.chargetrigger);
     }
 }

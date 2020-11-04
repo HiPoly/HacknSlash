@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
         playerAnim = GetComponent<PlayerAnim>();
         playerBody = GetComponent<Rigidbody>();
     }
-
     void Update()
     {
         RotatePlayer();
@@ -37,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
             playerBody.velocity.y,
             playerBody.velocity.z);
         }
-        
     }
     void RotatePlayer()
     {
@@ -52,7 +50,10 @@ public class PlayerMovement : MonoBehaviour
     }
     void AnimatePlayerWalk()
     {
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.D)) {
+        if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
+            playerAnim.Walk(true);
+        }
+        if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
             playerAnim.Walk(true);
         }
         else {
@@ -65,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         {
             playerAnim.Crouch(true);
         }
-        else
+        if (Input.GetKeyUp(KeyCode.S))
             playerAnim.Crouch(false);
     }
 

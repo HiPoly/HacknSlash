@@ -8,13 +8,12 @@ public enum BasicComboState{
     Basic1,
     Basic2,
     Basic3,
-    Fill
+    Basic4,
 }
 public enum DodgeComboState{
     None,
     Dodge1,
     Dodge2,
-    Fill
 }
 
 public class PlayerAttack : MonoBehaviour
@@ -23,10 +22,12 @@ public class PlayerAttack : MonoBehaviour
     private PlayerAnim PlayerAnim;
     private Rigidbody rb;
     private bool Grounded;
-    //Timers
+    //private bool MidCombo;
+    
+        //Timers
     private bool activateComboTimerToReset;
     private bool activateDodgeTimerToReset;
-    private float DefaultComboTimer = 0.8f;
+    private float DefaultComboTimer = 10;
     private float CurrentComboTimer;
     private float DefaultDodgeTimer = 2.0f;
     private float CurrentDodgeTimer;
@@ -37,6 +38,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float DashSpeed;
     [SerializeField] private float StartDashTime = 1.0f;
     [SerializeField] private float DashTime = 1.0f;
+
+    public Transform AttackPoint;
+    [SerializeField] private float AttackRange;
+    public int BaseDamage;
+    public LayerMask EnemyLayers;
 
     private void Start()
     {
@@ -52,6 +58,7 @@ public class PlayerAttack : MonoBehaviour
     {
         MoveTracker();
         ResetComboState();
+        CheckHit();
     }
     void MoveTracker()
     {
@@ -70,32 +77,40 @@ public class PlayerAttack : MonoBehaviour
                 return;
             }//Bounce
 
-            //check if basic combo finished
-            if (CurrentComboState >= BasicComboState.Basic3)
-            {
-                return;
-            }
-
             if (Grounded)
             {
-                CurrentComboState++;
-                activateComboTimerToReset = true;
+                if (CurrentComboState == BasicComboState.None)
+                {
+                    CurrentComboState = BasicComboState.Basic1;
+                }
+
+                //MidCombo = true;
                 CurrentComboTimer = DefaultComboTimer;
+                activateComboTimerToReset = true;
 
                 if (CurrentComboState == BasicComboState.Basic1)
                 {
+                    CurrentComboState++;
                     PlayerAnim.Basic1();
+                    Debug.Log("PlayingBasic1");
                 }
-                if (CurrentComboState == BasicComboState.Basic2)
+                else if (CurrentComboState == BasicComboState.Basic2)
                 {
+                    CurrentComboState++;
                     PlayerAnim.Basic2();
+                    Debug.Log("PlayingBasic2");
                 }
-                if (CurrentComboState == BasicComboState.Basic3)
+                else if (CurrentComboState == BasicComboState.Basic3)
                 {
+                    CurrentComboState++;
                     PlayerAnim.Basic3();
-
+                    Debug.Log("PlayingBasic3");
                 }
-
+                else if (CurrentComboState == BasicComboState.Basic4)
+                {
+                    CurrentComboState = BasicComboState.None;
+                    //MidCombo = false;
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -137,25 +152,39 @@ public class PlayerAttack : MonoBehaviour
             }
         }
     }
+
+    void CheckHit()
+    {
+        Collider[] HitEnemies = Physics.OverlapSphere(AttackPoint.position, AttackRange);
+
+        foreach(Collider enemy in HitEnemies)
+        {
+            enemy.GetComponent<EnemyStats>().Hit(BaseDamage);
+            Debug.Log("We hit " + enemy.name);
+        }
+    }
     void ResetComboState(){
         if (activateComboTimerToReset)
         {
             CurrentComboTimer -= Time.deltaTime;
-            if (CurrentComboTimer <= 0f)
+            if (CurrentComboTimer <= 0)
             {
-                CurrentComboState = BasicComboState.None;
+                Debug.Log("too slow fool");
+                //MidCombo = false; 
+                //CurrentComboState = BasicComboState.None;
                 activateComboTimerToReset = false;
-                CurrentComboTimer = DefaultComboTimer;
+                //CurrentComboTimer = DefaultComboTimer;
             }
         }
         if (activateDodgeTimerToReset)
         {
-            CurrentComboTimer -= Time.deltaTime;
+            CurrentDodgeTimer -= Time.deltaTime;
             if (CurrentDodgeTimer <= 0f)
             {
-                CurrentDodgeState = DodgeComboState.None;
+                Debug.Log("Timeout");
+                //CurrentDodgeState = DodgeComboState.None;
                 activateDodgeTimerToReset = false;
-                CurrentDodgeTimer = DefaultDodgeTimer;
+                //CurrentDodgeTimer = DefaultDodgeTimer;
             }
         }
     }

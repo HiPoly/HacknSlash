@@ -20,6 +20,14 @@ public class PlayerAnim : MonoBehaviour
         anim.SetBool(AnimationTags.crouchingbool, crouching);
     }
 
+    //Blocking Block/Parry
+    public void Block(bool blocking){
+        anim.SetBool(AnimationTags.blockingbool, blocking);
+    }
+    public void Parry(){
+        anim.SetTrigger(AnimationTags.parrytrigger);
+    }
+
     //Reactions Hit/Death
     public void Hit()
     {
@@ -61,5 +69,9 @@ public class PlayerAnim : MonoBehaviour
     }
     public void Slide(){
         anim.SetTrigger(AnimationTags.slidetrigger);
+    }
+    public void ComboEnd()
+    {
+        anim.SetTrigger(AnimationTags.comboendtrigger);
     }
 }

@@ -41,11 +41,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if(Input.GetAxisRaw(Axis.horizontalaxis) > 0)
         {
-            transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY), 0f);
+            transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY) * rotationSpeed, 0f);
         }
         else if(Input.GetAxisRaw(Axis.horizontalaxis) < 0)
         {
-            transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY), 0f);
+            transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY) * rotationSpeed, 0f);
         }
     }
     void AnimatePlayerWalk()
@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
             playerAnim.Walk(true);
         }
-        if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
+        else if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
             playerAnim.Walk(true);
         }
         else {

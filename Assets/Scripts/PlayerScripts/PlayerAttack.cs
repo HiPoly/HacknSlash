@@ -15,21 +15,19 @@ public enum DodgeComboState{
     Dodge1,
     Dodge2,
 }
-
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField]
     private PlayerAnim PlayerAnim;
     private Rigidbody rb;
     private bool Grounded;
-    //private bool MidCombo;
     
-        //Timers
+    //Timers
     private bool activateComboTimerToReset;
     private bool activateDodgeTimerToReset;
-    private float DefaultComboTimer = 10;
+    private float DefaultComboTimer = 1f;
     private float CurrentComboTimer;
-    private float DefaultDodgeTimer = 2.0f;
+    private float DefaultDodgeTimer = 1f;
     private float CurrentDodgeTimer;
     //Enums
     private BasicComboState CurrentComboState;
@@ -40,7 +38,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float DashTime = 1.0f;
 
     public Transform AttackPoint;
-    [SerializeField] private float AttackRange;
+    [SerializeField] private float AttackRange = 10;
     public int BaseDamage;
     public LayerMask EnemyLayers;
 
@@ -65,52 +63,45 @@ public class PlayerAttack : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //SpecialMoveChecks
-            if (Input.GetAxisRaw(Axis.horizontalaxis) > 0 && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
+            if (Input.GetKey(KeyCode.S) && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
                 PlayerAnim.Sweep();
-                return;}//Sweep
-            if (Input.GetAxisRaw(Axis.horizontalaxis) > 0){
+                Debug.Log("I am performing SWEEP");
+                return; }//Sweep
+            else if (Input.GetKey(KeyCode.W)){
                 PlayerAnim.Hold();
-                return;
-            }//Air-Hold
-            if (Input.GetAxisRaw(Axis.verticalaxis) < 0 && (!Grounded))
-            {PlayerAnim.Bounce();
-                return;
-            }//Bounce
+                Debug.Log("I am performing HOLD");
+                return; }//Air-Hold
+            else if (Input.GetKey(KeyCode.S) && (!Grounded)){
+                PlayerAnim.Bounce();
+                Debug.Log("I am performing BOUNCE");
+                return; }//Bouncea
+
+            //Charge attack goes here?
 
             if (Grounded)
             {
-                if (CurrentComboState == BasicComboState.None)
-                {
-                    CurrentComboState = BasicComboState.Basic1;
-                }
-
-                //MidCombo = true;
-                CurrentComboTimer = DefaultComboTimer;
-                activateComboTimerToReset = true;
+                    CurrentComboState++;
+                    activateComboTimerToReset = true;
 
                 if (CurrentComboState == BasicComboState.Basic1)
                 {
-                    CurrentComboState++;
                     PlayerAnim.Basic1();
                     Debug.Log("PlayingBasic1");
+                    CurrentComboTimer = DefaultComboTimer; //Time of Animation
                 }
                 else if (CurrentComboState == BasicComboState.Basic2)
                 {
-                    CurrentComboState++;
                     PlayerAnim.Basic2();
                     Debug.Log("PlayingBasic2");
+                    CurrentComboTimer = DefaultComboTimer; //Time of Animation
                 }
                 else if (CurrentComboState == BasicComboState.Basic3)
                 {
-                    CurrentComboState++;
                     PlayerAnim.Basic3();
                     Debug.Log("PlayingBasic3");
+                    CurrentComboTimer = DefaultComboTimer; //Time of Animation
                 }
-                else if (CurrentComboState == BasicComboState.Basic4)
-                {
-                    CurrentComboState = BasicComboState.None;
-                    //MidCombo = false;
-                }
+
             }
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -118,8 +109,9 @@ public class PlayerAttack : MonoBehaviour
             if (CurrentDodgeState >= DodgeComboState.Dodge2){
                 return;
             }
-            if (Input.GetAxis(Axis.horizontalaxis) > 0 && (Input.GetAxis(Axis.horizontalaxis) < 0)){
+            if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
                 PlayerAnim.Slide();
+                Debug.Log("I should be sliding");
                 return;
             }
             CurrentDodgeState++;
@@ -129,25 +121,25 @@ public class PlayerAttack : MonoBehaviour
             if (CurrentDodgeState == DodgeComboState.Dodge1)
             {
                 PlayerAnim.Dodge1();
-                if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+                //if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
                 {
-                    rb.velocity = Vector3.left * DashSpeed * Time.deltaTime;
+                    //rb.velocity = Vector3.left * DashSpeed * Time.deltaTime;
                 }
-                else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
+                //else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
                 {
-                    rb.velocity = Vector3.right * DashSpeed * Time.deltaTime;
+                    //rb.velocity = Vector3.right * DashSpeed * Time.deltaTime;
                 }
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
             {
                 PlayerAnim.Dodge2();
-                if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+                //if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
                 {
-                    rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
+                    //rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
                 }
-                else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
+                //else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
                 {
-                    rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
+                    //rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
                 }
             }
         }
@@ -159,8 +151,14 @@ public class PlayerAttack : MonoBehaviour
 
         foreach(Collider enemy in HitEnemies)
         {
-            enemy.GetComponent<EnemyStats>().Hit(BaseDamage);
-            Debug.Log("We hit " + enemy.name);
+            if (AttackPoint == null){
+                return;
+            }
+            else
+            {
+                //enemy.GetComponent<EnemyStats>().Hit(BaseDamage);
+                //Debug.Log("We hit " + enemy.name);
+            }
         }
     }
     void ResetComboState(){
@@ -170,10 +168,9 @@ public class PlayerAttack : MonoBehaviour
             if (CurrentComboTimer <= 0)
             {
                 Debug.Log("too slow fool");
-                //MidCombo = false; 
-                //CurrentComboState = BasicComboState.None;
+                CurrentComboState = BasicComboState.None;
                 activateComboTimerToReset = false;
-                //CurrentComboTimer = DefaultComboTimer;
+                PlayerAnim.ComboEnd();
             }
         }
         if (activateDodgeTimerToReset)
@@ -182,9 +179,9 @@ public class PlayerAttack : MonoBehaviour
             if (CurrentDodgeTimer <= 0f)
             {
                 Debug.Log("Timeout");
-                //CurrentDodgeState = DodgeComboState.None;
+                CurrentDodgeState = DodgeComboState.None;
                 activateDodgeTimerToReset = false;
-                //CurrentDodgeTimer = DefaultDodgeTimer;
+                PlayerAnim.ComboEnd();
             }
         }
     }

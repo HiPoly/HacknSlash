@@ -9,73 +9,76 @@ public class PlayerAnim : MonoBehaviour
     void Awake()
     {
         anim = GetComponent<Animator>();
-        
+
     }
 
     //Movement Walking/Running/Crouching
-    public void Run(bool running){
+    public void Run(bool running) {
         anim.SetBool(AnimationTags.runningbool, running);
     }
 
-    public void Walk(bool moving){
+    public void Walk(bool moving) {
         anim.SetBool(AnimationTags.movingbool, moving);
     }
-    public void Crouch(bool crouching){
+    public void Crouch(bool crouching) {
         anim.SetBool(AnimationTags.crouchingbool, crouching);
     }
 
     //Blocking Block/Parry
-    public void Block(bool blocking){
+    public void Block(bool blocking) {
         anim.SetBool(AnimationTags.blockingbool, blocking);
     }
-    public void Parry(){
+    public void Parry() {
         anim.SetTrigger(AnimationTags.parrytrigger);
     }
 
-    //Reactions Hit/Death
-    public void Hit()
-    {
+    //Reactions Hit/Death/Knockdown/Standup
+    public void Hit() {
         anim.SetTrigger(AnimationTags.hittrigger);
     }
-    public void Death()
-    {
+    public void Death() {
         anim.SetTrigger(AnimationTags.deathtrigger);
+    }
+    public void Knockdown() {
+        anim.SetTrigger(AnimationTags.knockdowntrigger);
+    }
+    public void Standup() {
+        anim.SetTrigger(AnimationTags.standuptrigger);
     }
 
     //Special Attacks Sweep/Hold/Charge/Bounce
-    public void Sweep(){
+    public void Sweep() {
         anim.SetTrigger(AnimationTags.sweeptrigger);
     }
-    public void Hold(){
+    public void Hold() {
         anim.SetTrigger(AnimationTags.holdtrigger);
     }
-    public void Charge(){
+    public void Charge() {
         anim.SetTrigger(AnimationTags.chargetrigger);
     }
-    public void Bounce(){
+    public void Bounce() {
         anim.SetTrigger(AnimationTags.bouncetrigger);
     }
 
     //Basic Attacks 1/2/3
-    public void Basic1(){
+    public void Basic1() {
         anim.SetTrigger(AnimationTags.basic1trigger);}
-    public void Basic2(){
+    public void Basic2() {
         anim.SetTrigger(AnimationTags.basic2trigger);}
-    public void Basic3(){
+    public void Basic3() {
         anim.SetTrigger(AnimationTags.basic3trigger);}
 
     //Dodges Step/Roll
-    public void Dodge1(){
+    public void Dodge1() {
     anim.SetTrigger(AnimationTags.dodge1trigger);
     }
-    public void Dodge2(){
+    public void Dodge2() {
     anim.SetTrigger(AnimationTags.dodge2trigger);
     }
-    public void Slide(){
+    public void Slide() {
         anim.SetTrigger(AnimationTags.slidetrigger);
     }
-    public void ComboEnd()
-    {
+    public void ComboEnd() {
         anim.SetTrigger(AnimationTags.comboendtrigger);
     }
 }

@@ -13,6 +13,13 @@ public class InputLogger : MonoBehaviour
     private int ListLength;
     [SerializeField] private int Intendedlength = 6;
 
+    //Display Slots
+    private string Element1;
+    private string Element2;
+    private string Element3;
+    private string Element4;
+    private string Element5;
+    private string Element6;
 
     private void Start()
     {
@@ -21,40 +28,14 @@ public class InputLogger : MonoBehaviour
 
     void Update()
     {
+        
+        LogInputs();
+        UpdateValues();
+        //UpdateUI();
+
         //need something to remove expired or excess inputs aswell
 
-        if (Input.GetKeyDown(KeyCode.Space)){
-            InputList.Insert(0, "Dodge");
-        }
-        if (Input.GetMouseButtonDown(0)){
-            InputList.Insert(0, "Attack");
-        }
-        if (Input.GetMouseButtonDown(1)){
-            InputList.Insert(0, "Block");
-        }
-        if (Input.GetMouseButtonDown(2)){
-            InputList.Insert(0, "Taunt");
-        }
-        if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
-        {
-            if (FacingRight) {
-                InputList.Insert(0, "Back");}
-            else{
-                InputList.Insert(0, "Forward");}
-        }
-        if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
-        {
-            if (FacingRight) {
-                InputList.Insert(0, "Forward");}
-            else{
-                InputList.Insert(0, "Back");}
-        }
-        if (Input.GetAxisRaw(Axis.verticalaxis) < 0){
-            InputList.Insert(0, "Down");
-        }
-        if (Input.GetAxisRaw(Axis.verticalaxis) > 0){
-            InputList.Insert(0, "Up");
-        }
+
 
         //check if list length is greater than x then reduce to correct size from back end.
         ListLength = InputList.Count;
@@ -64,4 +45,63 @@ public class InputLogger : MonoBehaviour
         }
         //check if input has been listed for a long period of time and remove expired values.
     }
+
+    void LogInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            InputList.Insert(0, "Dodge");
+        }
+        if (Input.GetMouseButtonDown(0)) {
+            InputList.Insert(0, "Attack");
+        }
+        if (Input.GetMouseButtonDown(1)) {
+            InputList.Insert(0, "Block");
+        }
+        if (Input.GetMouseButtonDown(2)) {
+            InputList.Insert(0, "Taunt");
+        }
+        if (Input.GetAxisRaw(Axis.horizontalaxis) < 0) {
+            if (FacingRight)
+            {
+                InputList.Insert(0, "Back");
+            }
+            else
+            {
+                InputList.Insert(0, "Forward");
+            }
+        }
+        if (Input.GetAxisRaw(Axis.horizontalaxis) > 0) {
+            if (FacingRight)
+            {
+                InputList.Insert(0, "Forward");
+            }
+            else
+            {
+                InputList.Insert(0, "Back");
+            }
+        }
+        if (Input.GetAxisRaw(Axis.verticalaxis) < 0){
+            InputList.Insert(0, "Down");
+        }
+        if (Input.GetAxisRaw(Axis.verticalaxis) > 0){
+            InputList.Insert(0, "Up");
+        }
+    }
+    void UpdateValues()
+    //
+    {
+        
+        Element1 = InputList[0];
+        //If InputList[0] = "Up"{
+        //Set 'image1' to UpArrow.png
+
+        foreach (string element in InputList) ;
+        {
+
+        }
+    }
+
+    //UpdateUI()
+        //Send the Elements to TextBoxes within unity
+    
 }

@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-    public int UnitHealth;
+    public int CurrentHealth;
     [SerializeField] private int StartingHealth = 100;
     private EnemyAnim EnemyAnim;
 
     void Start()
     {
-        UnitHealth = StartingHealth;
+        CurrentHealth = StartingHealth;
     }
     public void Hit(int damage)
     {
         EnemyAnim.Hit();
-        UnitHealth -= damage;
-        if (UnitHealth <= 0)
+        CurrentHealth -= damage;
+        if (CurrentHealth <= 0)
         {
             Debug.Log("this thing has died");
             EnemyAnim.Death();

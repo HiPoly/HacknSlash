@@ -12,7 +12,11 @@ public class PlayerAnim : MonoBehaviour
         
     }
 
-    //Movement Walking/Crouching
+    //Movement Walking/Running/Crouching
+    public void Run(bool running){
+        anim.SetBool(AnimationTags.runningbool, running);
+    }
+
     public void Walk(bool moving){
         anim.SetBool(AnimationTags.movingbool, moving);
     }

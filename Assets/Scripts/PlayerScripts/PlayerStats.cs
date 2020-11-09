@@ -4,20 +4,25 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    private int PlayerHealth;
+    
     [SerializeField] private int StartingHealth = 100;
-    public float PowerGauge;
+    public int CurrentHealth;
+    private int StartingPower = 0;
+    public int CurrentPower;
+
     private PlayerAnim PlayerAnim;
 
     void Start()
     {
-        PlayerHealth = StartingHealth;
+        CurrentHealth = StartingHealth;
+        CurrentPower = StartingPower;
     }
+
     public void Hit(int damage)
     {
-        PlayerHealth -= damage;
+        CurrentHealth -= damage;
         PlayerAnim.Hit();
-        if (PlayerHealth <= 0)
+        if (CurrentHealth <= 0)
         {
             Debug.Log("The player has died");
             PlayerAnim.Death();

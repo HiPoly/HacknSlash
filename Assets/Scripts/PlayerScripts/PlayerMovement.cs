@@ -20,8 +20,9 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         RotatePlayer();
-        AnimatePlayerWalk();
-        AnimateCrouch();
+        CheckCrouch();
+        CheckWalk();
+        CheckRun();
     }
     void FixedUpdate()
     {
@@ -48,19 +49,8 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY) * rotationSpeed, 0f);
         }
     }
-    void AnimatePlayerWalk()
-    {
-        if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
-            playerAnim.Walk(true);
-        }
-        else if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
-            playerAnim.Walk(true);
-        }
-        else {
-            playerAnim.Walk(false);
-        }
-    }
-    void AnimateCrouch()
+
+    void CheckCrouch()
     {
         if (Input.GetKey(KeyCode.S))
         {
@@ -68,6 +58,29 @@ public class PlayerMovement : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.S))
             playerAnim.Crouch(false);
+    }
+    void CheckWalk()
+    {
+        if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
+            playerAnim.Walk(true);
+            }
+        else if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
+            playerAnim.Walk(true);
+            }
+        else {
+            playerAnim.Walk(false);
+        }
+    }
+    void CheckRun()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            playerAnim.Run(true);
+        }
+        else
+        {
+            playerAnim.Run(false);
+        }
     }
 
 } // class

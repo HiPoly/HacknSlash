@@ -7,6 +7,7 @@ public class AnimationTags
     public const string idle = "Idle";
     public const string movingbool = "Moving";
     public const string crouchingbool = "Crouching";
+    public const string runningbool = "Running";
     //dodges
     public const string dodge1trigger = "Dodge1";
     public const string dodge2trigger = "Dodge2";

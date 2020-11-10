@@ -14,6 +14,7 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
+        PlayerAnim = GetComponent<PlayerAnim>();
         CurrentHealth = StartingHealth;
         CurrentPower = StartingPower;
     }

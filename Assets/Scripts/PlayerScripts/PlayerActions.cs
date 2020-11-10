@@ -15,6 +15,14 @@ public enum DodgeComboState{
     Dodge1,
     Dodge2,
 }
+public enum IStates{
+    None,
+    Blocking,
+    Dodging,
+    Sliding,
+    FrameArmour
+}
+
 public class PlayerActions : MonoBehaviour
 {
     [SerializeField]
@@ -37,9 +45,14 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float StartDashTime = 1.0f;
     //[SerializeField] private float DashTime = 1.0f;
 
+    //Control number of hits per strike through anim events
+    private bool AttackWindow = false;
+    private int Attacks = 0;
+
+    //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField] private float AttackRange = 10;
-    public int BaseDamage;
+    public int BaseDamage = 20;
     public LayerMask EnemyLayers;
 
     private void Start()
@@ -101,7 +114,6 @@ public class PlayerActions : MonoBehaviour
                     Debug.Log("PlayingBasic3");
                     CurrentComboTimer = DefaultComboTimer; //Time of Animation
                 }
-
             }
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -148,18 +160,41 @@ public class PlayerActions : MonoBehaviour
             }
         }
     }
+
+    //Animation Events that open the hit window and allow the player to deal damage once per strike
+
+    void OpenHit()
+    {
+        AttackWindow = true;
+        Attacks = 1;
+    }
+
+    void CloseHit()
+    {
+        AttackWindow = false;
+        Attacks = 0;
+
+    }
+
     void CheckHit()
     {
         Collider[] HitEnemies = Physics.OverlapSphere(AttackPoint.position, AttackRange);
 
-        foreach(Collider enemy in HitEnemies)
+        foreach(Collider Enemy in HitEnemies)
         {
-                Debug.Log("We hit " + enemy.name);
+            if (AttackWindow == true && Attacks > 0)
+            {
+                Debug.Log("We hit " + Enemy.name);
+                Enemy.GetComponent<EnemyStats>().Hit(BaseDamage);
+                Attacks = 0;
+            }
         }
     }
     private void OnDrawGizmosSelected()
-    {
-        if (AttackPoint == null)
+    {   //display attack range in gizmos
+        if (AttackPoint == null){
+            return;
+        }
         Gizmos.DrawWireSphere(AttackPoint.position, AttackRange);
     }
     void ResetComboState(){
@@ -168,7 +203,7 @@ public class PlayerActions : MonoBehaviour
             CurrentComboTimer -= Time.deltaTime;
             if (CurrentComboTimer <= 0)
             {
-                Debug.Log("too slow fool");
+                Debug.Log("BasicComboTimeout");
                 CurrentComboState = BasicComboState.None;
                 activateComboTimerToReset = false;
                 PlayerAnim.ComboEnd();
@@ -179,7 +214,7 @@ public class PlayerActions : MonoBehaviour
             CurrentDodgeTimer -= Time.deltaTime;
             if (CurrentDodgeTimer <= 0f)
             {
-                Debug.Log("Timeout");
+                Debug.Log("DodgeComboTimeout");
                 CurrentDodgeState = DodgeComboState.None;
                 activateDodgeTimerToReset = false;
                 PlayerAnim.ComboEnd();

@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     private EnemyAnim EnemyAnim;
-    private Rigidbody myBody;
+    private Rigidbody rb;
     public float speed = 5f;
     private Transform playerTarget;
 
@@ -19,7 +19,7 @@ public class EnemyMovement : MonoBehaviour
     void Awake()
     {
         EnemyAnim = GetComponentInChildren<EnemyAnim>();
-        myBody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
 
         playerTarget = GameObject.FindWithTag(Tags.playertag).transform;
     }
@@ -45,16 +45,16 @@ public class EnemyMovement : MonoBehaviour
         if (Vector3.Distance(transform.position, playerTarget.position) > AttackDistance)
         {
             transform.LookAt(playerTarget);
-            myBody.velocity = transform.forward * speed;
+            rb.velocity = transform.forward * speed;
 
-            if(myBody.velocity.sqrMagnitude != 0)
+            if(rb.velocity.sqrMagnitude != 0)
             {
                 EnemyAnim.Walk();
             }
         }
         else if (Vector3.Distance(transform.position, playerTarget.position) <= AttackDistance)
         {
-            myBody.velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             EnemyAnim.Walk();
             FollowPlayer = false;
             AttackPlayer = true;
@@ -81,5 +81,10 @@ public class EnemyMovement : MonoBehaviour
         }
 
     }
-
+    public void Die()
+    {
+        AttackPlayer = false;
+        FollowPlayer = false;
+        this.enabled = false;
+    }
 }

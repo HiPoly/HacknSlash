@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private PlayerAnim playerAnim;
+    private PlayerAnim PlayerAnim;
     private Rigidbody playerBody;
 
     public float walkSpeed = 100f;
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
-        playerAnim = GetComponent<PlayerAnim>();
+        PlayerAnim = GetComponent<PlayerAnim>();
         playerBody = GetComponent<Rigidbody>();
     }
     void Update()
@@ -54,32 +54,32 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.S))
         {
-            playerAnim.Crouch(true);
+            PlayerAnim.Crouch(true);
         }
         if (Input.GetKeyUp(KeyCode.S))
-            playerAnim.Crouch(false);
+            PlayerAnim.Crouch(false);
     }
     void CheckWalk()
     {
         if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
-            playerAnim.Walk(true);
+            PlayerAnim.Walk(true);
             }
         else if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
-            playerAnim.Walk(true);
+            PlayerAnim.Walk(true);
             }
         else {
-            playerAnim.Walk(false);
+            PlayerAnim.Walk(false);
         }
     }
     void CheckRun()
     {
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            playerAnim.Run(true);
+            PlayerAnim.Run(true);
         }
         else
         {
-            playerAnim.Run(false);
+            PlayerAnim.Run(false);
         }
     }
 

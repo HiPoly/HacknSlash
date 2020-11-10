@@ -61,22 +61,18 @@ public class InputLogger : MonoBehaviour
             InputList.Insert(0, "Taunt");
         }
         if (Input.GetAxisRaw(Axis.horizontalaxis) < 0) {
-            if (FacingRight)
-            {
+            if (FacingRight){
                 InputList.Insert(0, "Back");
             }
-            else
-            {
+            else{
                 InputList.Insert(0, "Forward");
             }
         }
         if (Input.GetAxisRaw(Axis.horizontalaxis) > 0) {
-            if (FacingRight)
-            {
+            if (FacingRight){
                 InputList.Insert(0, "Forward");
             }
-            else
-            {
+            else{
                 InputList.Insert(0, "Back");
             }
         }

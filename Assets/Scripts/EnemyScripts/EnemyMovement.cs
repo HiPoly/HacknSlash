@@ -16,6 +16,9 @@ public class EnemyMovement : MonoBehaviour
     private float DefaultAttackTime = 2f;
 
     private bool FollowPlayer, AttackPlayer;
+
+    //Max Clamped height, add dying if this height is reached
+    [SerializeField] private float MaxHeight;
     void Awake()
     {
         EnemyAnim = GetComponentInChildren<EnemyAnim>();
@@ -32,6 +35,7 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         Attack();
+        ClampY();
     }
     private void FixedUpdate()
     {
@@ -80,6 +84,12 @@ public class EnemyMovement : MonoBehaviour
             FollowPlayer = true;
         }
 
+    }
+    void ClampY()
+    {
+        Vector3 ClampedPosition = transform.position;
+        ClampedPosition.y = Mathf.Clamp(ClampedPosition.y, 0f, MaxHeight);
+        transform.position = ClampedPosition;
     }
     public void Die()
     {

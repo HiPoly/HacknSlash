@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour
     private float rotationY = -90;
     private float rotationSpeed = 15f;
 
+    //Max Clamp Height
+    [SerializeField] private float MaxHeight = 10f; 
+
     void Awake()
     {
         PlayerAnim = GetComponent<PlayerAnim>();
@@ -19,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        ClampY();
         RotatePlayer();
         CheckCrouch();
         CheckWalk();
@@ -38,6 +42,14 @@ public class PlayerMovement : MonoBehaviour
             playerBody.velocity.z);
         }
     }
+
+    void ClampY()
+    {
+        Vector3 ClampedPosition = transform.position;
+        ClampedPosition.y = Mathf.Clamp(ClampedPosition.y, 0f, MaxHeight);
+        transform.position = ClampedPosition;
+    }
+
     void RotatePlayer()
     {
         if(Input.GetAxisRaw(Axis.horizontalaxis) > 0)

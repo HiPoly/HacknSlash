@@ -29,7 +29,7 @@ public class PlayerActions : MonoBehaviour
     private PlayerAnim PlayerAnim;
     private Rigidbody rb;
     private bool Grounded;
-    
+
     //Timers
     private bool activateComboTimerToReset;
     private bool activateDodgeTimerToReset;
@@ -73,11 +73,29 @@ public class PlayerActions : MonoBehaviour
     {
         
         ResetComboState();
+        //Check For timed out dodge and attack combos
         CheckHit();
+        //Check if attack point is currently hitting an enemy
+        CheckGrounded();
+        //Check if the player's rigidbody is at y: 0
         CheckAttack();
+        //Check inputs for special attacks and combos
         CheckDodge();
+        //Check inputs for dodge related actions
         CheckBlock();
+        //Check inputs for blocking actions
     }
+
+    void CheckGrounded()
+    {
+        if (rb.transform.position.y == 0){
+            Grounded = true;
+        }
+        else{
+            Grounded = false;
+        }
+    }
+
     void CheckAttack()
     {
         if (Input.GetMouseButtonDown(0))

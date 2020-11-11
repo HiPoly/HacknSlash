@@ -2046,11 +2046,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7786470574639349020}
   - component: {fileID: 7747775510027217239}
-  - component: {fileID: 7747775510027217238}
   - component: {fileID: 7747775510027217240}
   - component: {fileID: 7747775510027217241}
   - component: {fileID: 7747775510027217242}
   - component: {fileID: 7747775510027217243}
+  - component: {fileID: 1240867097411996928}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -2086,25 +2086,11 @@ Rigidbody:
   m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!136 &7747775510027217238
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7441293585847723942}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.23925075
-  m_Height: 1.7126701
-  m_Direction: 1
-  m_Center: {x: -5.367292e-16, y: 0.8563348, z: 0.16276893}
 --- !u!95 &7747775510027217240
 Animator:
   serializedVersion: 3
@@ -2138,6 +2124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentHealth: 100
   StartingHealth: 100
+  HitForce: 100
 --- !u!114 &7747775510027217242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2153,6 +2140,7 @@ MonoBehaviour:
   speed: 0.8
   AttackDistance: 1.5
   ChasePlayerAfterAttack: 1
+  MaxHeight: 0
 --- !u!114 &7747775510027217243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2165,6 +2153,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b95ef824d8b754b99438bdc94a5385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1240867097411996928
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441293585847723942}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.6861558, z: 0.6509479}
+  m_Center: {x: -2.1748577e-16, y: 0.842196, z: 0.077804185}
 --- !u!1 &7609538270557165745
 GameObject:
   m_ObjectHideFlags: 0

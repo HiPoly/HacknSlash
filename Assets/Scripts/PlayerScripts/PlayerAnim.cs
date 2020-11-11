@@ -36,8 +36,10 @@ public class PlayerAnim : MonoBehaviour
         anim.SetTrigger(AnimationTags.sweeptrigger); }
     public void Hold() {
         anim.SetTrigger(AnimationTags.holdtrigger); }
-    public void Charge() {
-        anim.SetTrigger(AnimationTags.chargetrigger); }
+    public void ChargeHold() {
+        anim.SetTrigger(AnimationTags.chargeholdtrigger); }
+    public void ChargeRelease() {
+        anim.SetTrigger(AnimationTags.chargereleasetrigger); }
     public void Bounce() {
         anim.SetTrigger(AnimationTags.bouncetrigger); }
     //Basic Attacks 1/2/3

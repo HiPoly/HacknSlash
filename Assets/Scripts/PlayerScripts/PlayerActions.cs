@@ -45,14 +45,18 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float StartDashTime = 1.0f;
     //[SerializeField] private float DashTime = 1.0f;
 
-    //Control number of hits per strike through anim events
+    //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
     private int Attacks = 0;
+
+    //Tracking Charge Attack Requirements
+    [SerializeField] private int ChargeTracker;
+    [SerializeField] private int ChargeReady;
 
     //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField] private float AttackRange = 10;
-    public int BaseDamage = 20;
+    public int Power = 20;
     public LayerMask EnemyLayers;
 
     private void Start()
@@ -67,11 +71,14 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
-        MoveTracker();
+        
         ResetComboState();
         CheckHit();
+        CheckAttack();
+        CheckDodge();
+        CheckBlock();
     }
-    void MoveTracker()
+    void CheckAttack()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -89,7 +96,6 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("I am performing BOUNCE");
                 return; }//Bounce
 
-            //Charge attack goes here?
 
             if (Grounded)
             {
@@ -100,28 +106,50 @@ public class PlayerActions : MonoBehaviour
                 {
                     PlayerAnim.Basic1();
                     Debug.Log("PlayingBasic1");
-                    CurrentComboTimer = DefaultComboTimer; //Time of Animation
+                    CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
                 }
                 else if (CurrentComboState == BasicComboState.Basic2)
                 {
                     PlayerAnim.Basic2();
                     Debug.Log("PlayingBasic2");
-                    CurrentComboTimer = DefaultComboTimer; //Time of Animation
+                    CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
                 }
                 else if (CurrentComboState == BasicComboState.Basic3)
                 {
                     PlayerAnim.Basic3();
                     Debug.Log("PlayingBasic3");
-                    CurrentComboTimer = DefaultComboTimer; //Time of Animation
+                    CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
                 }
             }
         }
+
+    //Checking for Charge Attack
+    if (Input.GetMouseButton(0)) {
+            ChargeTracker = ChargeTracker + 1;
+        }
+    if (ChargeTracker >= ChargeReady) {
+            PlayerAnim.ChargeHold();
+        }
+    if (Input.GetMouseButtonUp(0) && ChargeTracker >= ChargeReady){
+            ChargeTracker = 0;
+            PlayerAnim.ChargeRelease();
+        }
+    else if (Input.GetMouseButtonUp(0) && ChargeTracker < ChargeReady){
+            ChargeTracker = 0;
+        }
+    }
+    
+    //Dodge and Slide Abilities
+    void CheckDodge()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {   // check if dodge sequence completed
-            if (CurrentDodgeState >= DodgeComboState.Dodge2){
+            if (CurrentDodgeState >= DodgeComboState.Dodge2)
+            {
                 return;
             }
-            if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
+            if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0))
+            {
                 PlayerAnim.Slide();
                 Debug.Log("I should be sliding");
                 return;
@@ -160,21 +188,28 @@ public class PlayerActions : MonoBehaviour
             }
         }
     }
+    void CheckBlock()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            PlayerAnim.Block(true);
+        }
+        else
+        {
+            PlayerAnim.Block(false);
+        }
+    }
 
     //Animation Events that open the hit window and allow the player to deal damage once per strike
-
     void OpenHit()
     {
         AttackWindow = true;
-        Attacks = 1;
-    }
+        Attacks = 1;}
 
     void CloseHit()
     {
         AttackWindow = false;
-        Attacks = 0;
-
-    }
+        Attacks = 0;}
 
     void CheckHit()
     {
@@ -185,7 +220,7 @@ public class PlayerActions : MonoBehaviour
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<EnemyStats>().Hit(BaseDamage);
+                Enemy.GetComponent<EnemyStats>().Hit(Power);
                 Attacks = 0;
             }
         }
@@ -222,4 +257,3 @@ public class PlayerActions : MonoBehaviour
         }
     }
 }//class
-

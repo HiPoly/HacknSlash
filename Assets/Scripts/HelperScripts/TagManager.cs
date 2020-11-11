@@ -24,7 +24,8 @@ public class AnimationTags
     public const string sweeptrigger = "Sweep";
     public const string holdtrigger = "Hold";
     public const string bouncetrigger = "Bounce";
-    public const string chargetrigger = "Charge";
+    public const string chargeholdtrigger = "ChargeHold";
+    public const string chargereleasetrigger = "ChargeRelease";
     //Statuses
     public const string knockdowntrigger = "KnockDown";
     public const string standuptrigger = "StandUp";

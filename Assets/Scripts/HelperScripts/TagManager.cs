@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationTags 
+public class AnimationTags
 {   //movements
     public const string idle = "Idle";
     public const string movingbool = "Moving";

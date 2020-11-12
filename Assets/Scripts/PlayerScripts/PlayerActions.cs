@@ -8,25 +8,18 @@ public enum BasicComboState{
     Basic1,
     Basic2,
     Basic3,
-    Basic4,
 }
 public enum DodgeComboState{
     None,
     Dodge1,
     Dodge2,
 }
-public enum IStates{
-    None,
-    Blocking,
-    Dodging,
-    Sliding,
-    FrameArmour
-}
 
 public class PlayerActions : MonoBehaviour
 {
     [SerializeField]
     private PlayerAnim PlayerAnim;
+    private Animator anim;
     private Rigidbody rb;
     private bool Grounded;
 
@@ -66,6 +59,7 @@ public class PlayerActions : MonoBehaviour
         CurrentComboState = BasicComboState.None;
         CurrentDodgeState = DodgeComboState.None;
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
         Grounded = true;
         //DashTime = StartDashTime;
     }
@@ -212,13 +206,11 @@ public class PlayerActions : MonoBehaviour
         }
     }
     void CheckBlock()
-    {
-        if (Input.GetMouseButton(1))
-        {
+    {   //Set Animations
+        if (Input.GetMouseButton(1)){
             PlayerAnim.Block(true);
         }
-        else
-        {
+        else{
             PlayerAnim.Block(false);
         }
     }

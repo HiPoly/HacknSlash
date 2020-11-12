@@ -13,6 +13,7 @@ public class AnimationTags
     public const string dodge2trigger = "Dodge2";
     public const string slidetrigger = "Slide";
     public const string recoverytrigger = "Recovery";
+    public const string jumptrigger = "Jump";
     //blocks
     public const string blockingbool = "Blocking";
     public const string parrytrigger = "Parry";
@@ -43,8 +44,6 @@ public class Tags
     public const string groundtag = "Ground";
     public const string playertag = "Player";
     public const string enemytag = "Enemy";
-    public const string leftarmtag = "LeftArm";
-    public const string leftlegtag = "LeftLeg";
     public const string maincameratag = "MainCam";
     public const string healthUI = "HealthUI";
     public const string untagged = "Untagged";

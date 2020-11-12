@@ -55,8 +55,8 @@ public class PlayerActions : MonoBehaviour
 
     //Attacking Hitbox and Size
     public Transform AttackPoint;
-    [SerializeField] private float AttackRange = 10;
-    public int Power = 20;
+    [SerializeField] private float AttackRange = 0.1f;
+    public int Power = 30;
     public LayerMask EnemyLayers;
 
     private void Start()
@@ -71,17 +71,16 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
-        
-        ResetComboState();
-        //Check For timed out dodge and attack combos
-        CheckHit();
-        //Check if attack point is currently hitting an enemy
         CheckGrounded();
         //Check if the player's rigidbody is at y: 0
+        CheckHit();
+        //Check if attack point is currently hitting an enemy
         CheckAttack();
         //Check inputs for special attacks and combos
         CheckDodge();
         //Check inputs for dodge related actions
+        ResetComboState();
+        //Check For timed out dodge and attack combos
         CheckBlock();
         //Check inputs for blocking actions
     }
@@ -166,10 +165,16 @@ public class PlayerActions : MonoBehaviour
             {
                 return;
             }
-            if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0))
+            //Check for Special Inputs
+            else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0))
             {
                 PlayerAnim.Slide();
                 Debug.Log("I should be sliding");
+                return;
+            }
+            else if (Input.GetKey(KeyCode.W)){
+                PlayerAnim.Jump();
+                Debug.Log("I am Jumping");
                 return;
             }
             CurrentDodgeState++;

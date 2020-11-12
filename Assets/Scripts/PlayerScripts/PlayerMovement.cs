@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private float rotationSpeed = 15f;
 
     //Max Clamp Height
-    [SerializeField] private float MaxHeight = 10f; 
+    [SerializeField] private float MaxHeight = 100f; 
 
     void Awake()
     {

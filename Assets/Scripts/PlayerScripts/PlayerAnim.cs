@@ -10,7 +10,7 @@ public class PlayerAnim : MonoBehaviour
     {
         anim = GetComponent<Animator>();
     }
-    //Movement Walking/Running/Crouching
+    //Movement Walking/Running/Crouching/Blocking
     public void Run(bool running) {
         anim.SetBool(AnimationTags.runningbool, running); }
     public void Walk(bool moving) {
@@ -49,13 +49,17 @@ public class PlayerAnim : MonoBehaviour
         anim.SetTrigger(AnimationTags.basic2trigger); }
     public void Basic3() {
         anim.SetTrigger(AnimationTags.basic3trigger); }
-    //Dodges Step/Roll
+    //Dodges Step/Roll/Slide/Jump
     public void Dodge1() {
     anim.SetTrigger(AnimationTags.dodge1trigger); }
     public void Dodge2() {
     anim.SetTrigger(AnimationTags.dodge2trigger); }
     public void Slide() {
         anim.SetTrigger(AnimationTags.slidetrigger); }
+    public void Jump() {
+        anim.SetTrigger(AnimationTags.jumptrigger);
+    }
+    //ComboEnd
     public void ComboEnd() {
         anim.SetTrigger(AnimationTags.comboendtrigger); }
 }

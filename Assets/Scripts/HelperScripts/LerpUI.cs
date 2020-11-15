@@ -4,24 +4,22 @@ using UnityEngine;
 
 public class LerpUI : MonoBehaviour
 {
-    float t;
-    Vector3 startPosition;
-    public Vector3 UITarget;
-    float timeToReachTarget;
-    void Start()
-    {
-        startPosition = UITarget = transform.position;
-    }
+    public GameObject UITarget;
+    private Vector3 Target; 
+    [SerializeField] private float speed;
     void Update()
     {
-        t += Time.deltaTime / timeToReachTarget;
-        transform.position = Vector3.Lerp(startPosition, UITarget, t);
+        MoveToTarget();
+        CreateTarget();
     }
-    public void SetDestination(Vector3 destination, float time)
+    void CreateTarget()
     {
-        t = 0;
-        startPosition = transform.position;
-        timeToReachTarget = time;
-        UITarget = destination;
+        Vector3 Target = new Vector3(UITarget.transform.position.x, 0, UITarget.transform.position.z);
     }
+    void MoveToTarget()
+    {
+        float step = speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, Target, step);
+    }
+
 }

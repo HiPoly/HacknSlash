@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class EnemyActions : MonoBehaviour
 {
-    private EnemyAnim EnemyAnim;
+    //Misc
+    private bool Grounded;
+    //Fetched Components
+        //Scripts
+        private EnemyStats EnemyStats;
+        private EnemyAnim EnemyAnim;
     private Rigidbody rb;
-    public float speed = 5f;
     private Transform PlayerTarget;
-
+    //AttackVars
+    private bool FollowPlayer, AttackPlayer;
+    public float speed = 5f;
     public float AttackDistance = 1f;
     public float ChasePlayerAfterAttack = 1f;
-
     private float CurrentAttackTime;
     private float DefaultAttackTime = 4f;
-
-    private bool FollowPlayer, AttackPlayer;
-    private bool Grounded;
-
     //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
     private int Attacks = 0;
-
     //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField] private float AttackRange = 0.1f;
@@ -45,17 +45,16 @@ public class EnemyActions : MonoBehaviour
         CurrentAttackTime = DefaultAttackTime;
     }
     void Update(){
-        CheckGrounded();
-        //Check if the player's rigidbody is at y: 0
         CheckHit();
         //Check if attack point is currently hitting an enemy
         CheckAttack();
         //Check inputs for special attacks and combos
+        CheckGrounded();
+        //Check if the player's rigidbody is at y: 0
         ClampY();
         //Keep the enemy above world space Y: 0 and below the max-height
-        
-
         CheckGrounded();
+        //Check if the player's rigidbody is at y: 0
     }
     private void FixedUpdate(){
         //Look at and move to attacking range of the player 
@@ -93,7 +92,7 @@ public class EnemyActions : MonoBehaviour
             AttackPlayer = true;
         }
     }
-    //Animation Events that open the hit window and allow the player to deal damage once per strike
+    //Animation Events that open the hit window and allow the Enemy to deal damage once per strike
     void OpenHit(){
         AttackWindow = true;
         Attacks = 1;
@@ -111,7 +110,7 @@ public class EnemyActions : MonoBehaviour
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<PlayerStats>().Hit(AttackDamage);
+                Enemy.GetComponent<PlayerStats>().Hit(EnemyStats.CurrentDamage);
                 Attacks = 0;
             }
         }

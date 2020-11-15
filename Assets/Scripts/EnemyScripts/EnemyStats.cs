@@ -5,25 +5,45 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-    public int CurrentHealth;
-    [SerializeField] private int StartingHealth = 100;
-    private EnemyAnim EnemyAnim;
-    private Rigidbody rb;
-    [SerializeField] private float HitForce = 200;
+    //Misc
     private bool Grounded;
-    private bool Dead = false;
-
+    private bool Alive = true;
+    //Fetched Components
+    private EnemyAnim EnemyAnim;
+    private Animator anim;
+    private Rigidbody rb;
+    private PlayerStats PlayerStats;
+    //Health, Damage and Force
+    [SerializeField] 
+    private int StartingHealth = 100;
+    public int CurrentHealth;
+    [SerializeField] 
+    private int StartingDamage;
+    public int CurrentDamage;
+    [SerializeField]
+    private int StartingForce;
+    public int CurrentForce;
+    public int ForcePerHit;
+    //GravityVars
     private float ElapsedTime;
     private float GravLerpTime = 3;
     private float CurrentGrav;
     private float LowGrav = -0.25f;
     private float MaxGrav = -1f;
+    //IStateVars
+    private bool Blocking;
+
+    
+
+    [SerializeField] 
 
     void Start()
     {
         EnemyAnim = GetComponent<EnemyAnim>();
+        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         CurrentHealth = StartingHealth;
+        CurrentDamage = StartingDamage;
         CurrentGrav = MaxGrav;
     }
 
@@ -31,27 +51,34 @@ public class EnemyStats : MonoBehaviour
     {
         Grav();
         //Lerps back to standard value for gravity while the Enemy is not being hit
-        Goodnight();
-        //Checks if the player is dead and execute an end of life routine 
+         
         RemoveForceOnGround();
+        //Remove continuous downward force when supported by the ground
+        Goodnight();
+        //Checks if the player is dead and execute an end of life routine
     }
-
-    private void RemoveForceOnGround()
+    public void Hit(int damage)
     {
-        if (transform.position.y == 0)
-        {
-            rb.velocity = Vector3.zero;
-        }
+        ElapsedTime = 0;
+        CurrentGrav = LowGrav;
 
+        EnemyAnim.Hit();
+        CurrentHealth -= damage;
+        if (CurrentHealth > 0)
+        {
+            rb.transform.position += Vector3.up * PlayerStats.CurrentDamage * Time.deltaTime;
+        }
+        if (CurrentHealth <= 0)
+        {
+            Debug.Log("this thing has died");
+            EnemyAnim.Death();
+            Alive = false;
+            GetComponent<EnemyActions>().Die();
+            GetComponent<Collider>().enabled = false;
+        }
     }
 
-    private void Goodnight()
-    {
-        if (Dead)
-        {
 
-        }
-    }
     void Grav()
     {
         if (ElapsedTime < GravLerpTime && transform.position.y != 0)
@@ -64,24 +91,19 @@ public class EnemyStats : MonoBehaviour
             rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
         }
     }
-    public void Hit(int damage)
+    
+    private void RemoveForceOnGround()
     {
-        ElapsedTime = 0;
-        CurrentGrav = LowGrav;
-        
-        EnemyAnim.Hit();
-        CurrentHealth -= damage;
-        if (CurrentHealth > 0) 
+        if (transform.position.y == 0)
         {
-            rb.transform.position += Vector3.up * HitForce * 1.5f * Time.deltaTime;
+            rb.velocity = Vector3.zero;
         }
-        if (CurrentHealth <= 0)
+    }
+    private void Goodnight()
+    {
+        if (!Alive)
         {
-            Debug.Log("this thing has died");
-            EnemyAnim.Death();
-            Dead = true;
-            GetComponent<EnemyActions>().Die();
-            GetComponent<Collider>().enabled = false;
+
         }
     }
 }

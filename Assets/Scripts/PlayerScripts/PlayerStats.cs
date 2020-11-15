@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum IStates
-{
+public enum IStates{
     None,
     Blocking,
     Dodging,
@@ -13,38 +12,41 @@ public enum IStates
 }
 public class PlayerStats : MonoBehaviour
 {
-    
-    [SerializeField] private int StartingHealth = 100;
-    public int CurrentHealth;
-    private int StartingPower = 0;
-    public int CurrentPower;
-
-    //Animation Script
+    //Enums
+    private IStates CurrentIState;
+    //Fetched Components
     private PlayerAnim PlayerAnim;
     private Animator anim;
-
     private Rigidbody rb;
-
+    private EnemyStats EnemyStats;
+    //Health, Damage and Force
+    [SerializeField] 
+    private int StartingHealth = 100;
+    public int CurrentHealth;
+    [SerializeField]
+    private int StartingDamage = 20 ;
+    public int CurrentDamage;
+    [SerializeField]
+    private int StartingForce;
+    public int CurrentForce;
+    public int ForcePerHit = 20;
     //GravityVars
     private float ElapsedTime;
     private float GravLerpTime = 3;
     private float CurrentGrav;
     private float LowGrav = -0.25f;
     private float MaxGrav = -1f;
-
-
+    //Code later with Istates, use dodge for now
+    //IStateVars
     private bool Blocking;
     private bool Dodging;
     private bool Sturdy;
     private float SturdyPercent;
     private bool Alive;
-
+    //Parry vars
     private float ParryTimer;
     private float ParryTime;
     private bool CanParry = false;
-
-
-    private IStates CurrentIState;
 
     void Start()
     {
@@ -53,35 +55,61 @@ public class PlayerStats : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         CurrentIState = IStates.None;
         CurrentHealth = StartingHealth;
-        CurrentPower = StartingPower;
+        CurrentDamage = StartingDamage;
+        CurrentForce = StartingForce;
         CurrentGrav = MaxGrav;
         ParryTime = 0.5f;
     }
 
-    void Update()
-    {
-        Grav();
-        //Lerps back to standard value for gravity while the Player is not being hit
+    void Update(){
         CheckIState();
         //Checks whether animations that would make the player invulnerable are playing
         CheckParry();
-        //While
+        //Add a timer once blocking starts to see if the player can still parry
+        Grav();
+        //Lerps back to standard value for gravity while the Player is not being hit
+        RemoveForceOnGround();
+        //Remove continuous downward force when supported by the ground
+    }
+    public void Hit(int damage){
+        if (CurrentIState != IStates.Blocking && CurrentIState != IStates.Dodging){
+            if (CurrentIState == IStates.Blocking){
+                if (CanParry == true){
+                    PlayerAnim.Parry();
+                    CurrentForce += ForcePerHit;
+                }
+                return;
+            }
+            ElapsedTime = 0;
+            CurrentGrav = LowGrav;
+            PlayerAnim.Hit();
+            CurrentHealth -= damage;
+            if (CurrentHealth > 0)
+            {
+                rb.transform.position += Vector3.up * EnemyStats.CurrentDamage * Time.deltaTime;
+            }
+            if (CurrentHealth <= 0)
+            {
+                Debug.Log("this thing has died");
+                PlayerAnim.Death();
+                Alive = false;
+                GetComponent<Collider>().enabled = false;
+            }
+        }
     }
 
-    void CheckParry()
-    {
-        while (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Blocking"))
-        {
+    void CheckParry(){
+        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Blocking")){
             ParryTimer += Time.deltaTime;
         }
-        if (ParryTimer <= ParryTime)
-        {
+        else{
+            ParryTimer = 0;
+        }
+        if (ParryTimer <= ParryTime){
         CanParry = true;
         }
     }
-
-    private void CheckIState()
-    {
+    private void CheckIState(){
         //Set IStates while animations are playing
         if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Blocking")){
             CurrentIState = IStates.Blocking;
@@ -96,7 +124,6 @@ public class PlayerStats : MonoBehaviour
             CurrentIState = IStates.Dodging;
         }
     }
-
     void Grav()
     {
         if (ElapsedTime < GravLerpTime && transform.position.y != 0)
@@ -109,26 +136,12 @@ public class PlayerStats : MonoBehaviour
             rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
         }
     }
-    public void Hit(int damage)
+    
+    private void RemoveForceOnGround()
     {
-        if (CurrentIState != IStates.Blocking && CurrentIState != IStates.Dodging)
+        if (transform.position.y == 0)
         {
-            ElapsedTime = 0;
-            CurrentGrav = LowGrav;
-
-            PlayerAnim.Hit();
-            CurrentHealth -= damage;
-            if (CurrentHealth > 0)
-            {
-                rb.transform.position += Vector3.up * 200 * 1.5f * Time.deltaTime;
-            }
-            if (CurrentHealth <= 0)
-            {
-                Debug.Log("this thing has died");
-                PlayerAnim.Death();
-                Alive = false;
-                GetComponent<Collider>().enabled = false;
-            }
+            rb.velocity = Vector3.zero;
         }
     }
 }

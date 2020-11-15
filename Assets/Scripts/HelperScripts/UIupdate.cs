@@ -13,14 +13,14 @@ public class UIupdate : MonoBehaviour
     void Update()
     {
         UpdateHealth();
-        UpdatePower();
+        UpdateForce();
     }
 
     public void UpdateHealth(){
         HealthSlider.value = GameObject.Find("Player").GetComponent<PlayerStats>().CurrentHealth;
     }
-    public void UpdatePower(){
-        PowerSlider.value = GameObject.Find("Player").GetComponent<PlayerStats>().CurrentPower;
+    public void UpdateForce(){
+        PowerSlider.value = GameObject.Find("Player").GetComponent<PlayerStats>().CurrentForce;
     }
 }
 

@@ -8,12 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody playerBody;
 
     public float walkSpeed = 100f;
-
     private float rotationY = -90;
     private float rotationSpeed = 15f;
-
-    //Max Clamp Height
-    [SerializeField] private float MaxHeight = 100f; 
 
     void Awake()
     {
@@ -22,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        ClampY();
         RotatePlayer();
         CheckCrouch();
         CheckWalk();
@@ -42,26 +37,17 @@ public class PlayerMovement : MonoBehaviour
             playerBody.velocity.z);
         }
     }
-
-    void ClampY()
-    {
-        Vector3 ClampedPosition = transform.position;
-        ClampedPosition.y = Mathf.Clamp(ClampedPosition.y, 0f, MaxHeight);
-        transform.position = ClampedPosition;
-    }
-
     void RotatePlayer()
     {
-        if(Input.GetAxisRaw(Axis.horizontalaxis) > 0)
+        if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
         {
             transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY) * rotationSpeed, 0f);
         }
-        else if(Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+        else if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
         {
             transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY) * rotationSpeed, 0f);
         }
     }
-
     void CheckCrouch()
     {
         if (Input.GetKey(KeyCode.S))

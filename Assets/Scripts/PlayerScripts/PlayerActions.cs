@@ -16,13 +16,14 @@ public enum DodgeComboState{
 }
 
 public class PlayerActions : MonoBehaviour
-{
-    [SerializeField]
-    private PlayerAnim PlayerAnim;
+{   //misc
+    private bool Grounded;
+    //Fetched Components
+        //Scripts
+        [SerializeField] private PlayerAnim PlayerAnim;
+        [SerializeField] private PlayerStats PlayerStats;
     private Animator anim;
     private Rigidbody rb;
-    private bool Grounded;
-
     //Timers
     private bool activateComboTimerToReset;
     private bool activateDodgeTimerToReset;
@@ -33,27 +34,23 @@ public class PlayerActions : MonoBehaviour
     //Enums
     private BasicComboState CurrentComboState;
     private DodgeComboState CurrentDodgeState;
-
+    //DashVars
     [SerializeField] private float DashSpeed;
-    [SerializeField] private float StartDashTime = 1.0f;
-    //[SerializeField] private float DashTime = 1.0f;
-
+    [SerializeField] private float StartDashTime;
     //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
     private int Attacks = 0;
-
     //Tracking Charge Attack Requirements
     [SerializeField] private int ChargeTracker;
     [SerializeField] private int ChargeReady;
-
     //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField] private float AttackRange = 0.1f;
-    public int Power = 30;
     public LayerMask EnemyLayers;
+    //Max Clamped height
+    [SerializeField] private float MaxHeight = 100f;
 
-    private void Start()
-    {
+    private void Start(){
         CurrentComboTimer = DefaultComboTimer;
         CurrentDodgeTimer = DefaultDodgeTimer;
         CurrentComboState = BasicComboState.None;
@@ -65,8 +62,6 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
-        CheckGrounded();
-        //Check if the player's rigidbody is at y: 0
         CheckHit();
         //Check if attack point is currently hitting an enemy
         CheckAttack();
@@ -77,23 +72,15 @@ public class PlayerActions : MonoBehaviour
         //Check For timed out dodge and attack combos
         CheckBlock();
         //Check inputs for blocking actions
+        CheckGrounded();
+        //Check if the player's rigidbody is at y: 0
+        ClampY();
     }
-
-    void CheckGrounded()
-    {
-        if (rb.transform.position.y == 0){
-            Grounded = true;
-        }
-        else{
-            Grounded = false;
-        }
-    }
-
     void CheckAttack()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //SpecialMoveChecks
+            //SpecialMoveCheck
             if (Input.GetKey(KeyCode.S) && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
                 PlayerAnim.Sweep();
                 Debug.Log("I am performing SWEEP");
@@ -106,35 +93,28 @@ public class PlayerActions : MonoBehaviour
                 PlayerAnim.Bounce();
                 Debug.Log("I am performing BOUNCE");
                 return; }//Bounce
-
-
-            if (Grounded)
-            {
+            if (Grounded){
                     CurrentComboState++;
                     activateComboTimerToReset = true;
-
-                if (CurrentComboState == BasicComboState.Basic1)
-                {
+                //BasicComboCheck
+                if (CurrentComboState == BasicComboState.Basic1){
                     PlayerAnim.Basic1();
                     Debug.Log("PlayingBasic1");
                     CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
                 }
-                else if (CurrentComboState == BasicComboState.Basic2)
-                {
+                else if (CurrentComboState == BasicComboState.Basic2){
                     PlayerAnim.Basic2();
                     Debug.Log("PlayingBasic2");
                     CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
                 }
-                else if (CurrentComboState == BasicComboState.Basic3)
-                {
+                else if (CurrentComboState == BasicComboState.Basic3){
                     PlayerAnim.Basic3();
                     Debug.Log("PlayingBasic3");
                     CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
                 }
             }
         }
-
-    //Checking for Charge Attack
+    //ChargeAttackCheck
     if (Input.GetMouseButton(0)) {
             ChargeTracker = ChargeTracker + 1;
         }
@@ -216,16 +196,12 @@ public class PlayerActions : MonoBehaviour
     }
 
     //Animation Events that open the hit window and allow the player to deal damage once per strike
-    void OpenHit()
-    {
+    void OpenHit(){
         AttackWindow = true;
         Attacks = 1;}
-
-    void CloseHit()
-    {
+    void CloseHit(){
         AttackWindow = false;
         Attacks = 0;}
-
     void CheckHit()
     {
         Collider[] HitEnemies = Physics.OverlapSphere(AttackPoint.position, AttackRange);
@@ -235,7 +211,8 @@ public class PlayerActions : MonoBehaviour
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<EnemyStats>().Hit(Power);
+                Enemy.GetComponent<EnemyStats>().Hit(PlayerStats.CurrentDamage);
+                PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
                 Attacks = 0;
             }
         }
@@ -269,6 +246,19 @@ public class PlayerActions : MonoBehaviour
                 activateDodgeTimerToReset = false;
                 PlayerAnim.ComboEnd();
             }
+        }
+    }
+    void ClampY(){
+        Vector3 ClampedPosition = transform.position;
+        ClampedPosition.y = Mathf.Clamp(ClampedPosition.y, 0f, MaxHeight);
+        transform.position = ClampedPosition;
+    }
+    void CheckGrounded(){
+        if (rb.transform.position.y == 0){
+            Grounded = true;
+        }
+        else{
+            Grounded = false;
         }
     }
 }//class

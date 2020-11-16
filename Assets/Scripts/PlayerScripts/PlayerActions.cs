@@ -212,7 +212,7 @@ public class PlayerActions : MonoBehaviour
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<EnemyStats>().Hit(PlayerStats.CurrentDamage);
+                Enemy.GetComponent<EnemyStats>().Hit(GetComponent<PlayerStats>().CurrentDamage);
                 PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
                 Attacks = 0;
             }

@@ -9,6 +9,7 @@ public class EnemyActions : MonoBehaviour
     //Fetched Components
         //Scripts
         private EnemyStats EnemyStats;
+        private PlayerStats PlayerStats;
         private EnemyAnim EnemyAnim;
     private Rigidbody rb;
     private Transform PlayerTarget;
@@ -44,6 +45,7 @@ public class EnemyActions : MonoBehaviour
         FollowPlayer = true;
         CurrentAttackTime = DefaultAttackTime;
         EnemyStats = GetComponent<EnemyStats>();
+        PlayerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
     }
     void Update(){
         CheckHit();
@@ -111,7 +113,7 @@ public class EnemyActions : MonoBehaviour
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<PlayerStats>().Hit(PlayerStats.CurrentDamage);
+                Enemy.GetComponent<PlayerStats>().Hit(GetComponent<EnemyStats>().CurrentDamage);
                 Attacks = 0;
             }
         }

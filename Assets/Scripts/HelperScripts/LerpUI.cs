@@ -22,7 +22,7 @@ public class LerpUI : MonoBehaviour
     }
     void CreateTarget()
     {
-        Target = new Vector3(UITarget.transform.position.x, transform.position.y, UITarget.transform.position.z);
+        Target = new Vector3(UITarget.transform.position.x, transform.position.y, transform.position.z);
     }
     void MoveToTarget()
     {

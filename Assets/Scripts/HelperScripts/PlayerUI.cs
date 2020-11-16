@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIupdate : MonoBehaviour
+public class PlayerUI : MonoBehaviour
 {
     //The Player
     public GameObject Player;

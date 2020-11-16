@@ -20,12 +20,11 @@ public class PlayerStats : MonoBehaviour
     private Rigidbody rb;
     private EnemyStats EnemyStats;
     //Health, Damage and Force
-    [SerializeField] 
-    private int StartingHealth = 100;
+    public int StartingHealth = 200;
     public int CurrentHealth;
     [SerializeField]
     private int StartingDamage = 20 ;
-    public int CurrentDamage;
+    public int CurrentDamage = 20;
     [SerializeField]
     private int StartingForce;
     public int CurrentForce;
@@ -45,7 +44,7 @@ public class PlayerStats : MonoBehaviour
     private bool Alive;
     //Parry vars
     private float ParryTimer;
-    private float ParryTime;
+    [SerializeField] private float ParryTime;
     private bool CanParry = false;
 
     void Start()
@@ -60,7 +59,6 @@ public class PlayerStats : MonoBehaviour
         CurrentGrav = MaxGrav;
         ParryTime = 0.5f;
     }
-
     void Update(){
         CheckIState();
         //Checks whether animations that would make the player invulnerable are playing
@@ -86,7 +84,7 @@ public class PlayerStats : MonoBehaviour
             CurrentHealth -= damage;
             if (CurrentHealth > 0)
             {
-                rb.transform.position += Vector3.up * EnemyStats.CurrentDamage * Time.deltaTime;
+                rb.transform.position += Vector3.up * GameObject.Find("Enemy").GetComponent<EnemyStats>().CurrentDamage * Time.deltaTime;
             }
             if (CurrentHealth <= 0)
             {
@@ -144,4 +142,11 @@ public class PlayerStats : MonoBehaviour
             rb.velocity = Vector3.zero;
         }
     }
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        //Print the unit's current state above it in the editor
+        //CurrentIState
+    }
+#endif
 }

@@ -14,8 +14,7 @@ public class EnemyStats : MonoBehaviour
     private Rigidbody rb;
     private PlayerStats PlayerStats;
     //Health, Damage and Force
-    [SerializeField] 
-    private int StartingHealth = 100;
+    public int StartingHealth = 100;
     public int CurrentHealth;
     [SerializeField] 
     private int StartingDamage;
@@ -32,10 +31,6 @@ public class EnemyStats : MonoBehaviour
     private float MaxGrav = -1f;
     //IStateVars
     private bool Blocking;
-
-    
-
-    [SerializeField] 
 
     void Start()
     {
@@ -66,7 +61,7 @@ public class EnemyStats : MonoBehaviour
         CurrentHealth -= damage;
         if (CurrentHealth > 0)
         {
-            rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
+            rb.transform.position += Vector3.up * GameObject.Find("Player").GetComponent<PlayerStats>().CurrentForce * Time.deltaTime;
         }
         if (CurrentHealth <= 0)
         {

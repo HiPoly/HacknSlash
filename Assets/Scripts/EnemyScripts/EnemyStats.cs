@@ -66,7 +66,7 @@ public class EnemyStats : MonoBehaviour
         CurrentHealth -= damage;
         if (CurrentHealth > 0)
         {
-            rb.transform.position += Vector3.up * PlayerStats.CurrentDamage * Time.deltaTime;
+            rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
         }
         if (CurrentHealth <= 0)
         {

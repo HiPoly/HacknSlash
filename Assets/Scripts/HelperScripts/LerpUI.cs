@@ -7,19 +7,27 @@ public class LerpUI : MonoBehaviour
     public GameObject UITarget;
     private Vector3 Target; 
     [SerializeField] private float speed;
+    private float duration = 2f;
+
+    void Start()
+    {
+        transform.position = UITarget.transform.position;
+    }
+
     void Update()
     {
         MoveToTarget();
         CreateTarget();
+
     }
     void CreateTarget()
     {
-        Vector3 Target = new Vector3(UITarget.transform.position.x, 0, UITarget.transform.position.z);
+        Target = new Vector3(UITarget.transform.position.x, transform.position.y, UITarget.transform.position.z);
     }
     void MoveToTarget()
     {
-        float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, Target, step);
+        float step = speed * Time.deltaTime/duration;
+        transform.position = Vector3.Lerp(transform.position, Target, step);
     }
 
 }

@@ -43,6 +43,7 @@ public class EnemyActions : MonoBehaviour
     {
         FollowPlayer = true;
         CurrentAttackTime = DefaultAttackTime;
+        EnemyStats = GetComponent<EnemyStats>();
     }
     void Update(){
         CheckHit();

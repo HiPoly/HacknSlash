@@ -57,6 +57,7 @@ public class PlayerActions : MonoBehaviour
         CurrentDodgeState = DodgeComboState.None;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        PlayerStats = GetComponent<PlayerStats>();
         Grounded = true;
         //DashTime = StartDashTime;
     }

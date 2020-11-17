@@ -22,12 +22,14 @@ public class EnemyAnim : MonoBehaviour
         anim.SetBool(AnimationTags.movingbool, true); }
     public void Idle(){
         anim.Play(AnimationTags.idle); }
-    public void KnockDown(){
-        anim.Play(AnimationTags.knockdowntrigger); }
     public void StandUp(){
         anim.Play(AnimationTags.standuptrigger); }
     public void Hit(){
         anim.Play(AnimationTags.hittrigger); }
+    public void Falling(){
+        anim.Play(AnimationTags.fallingtrigger); }
+    public void Land(){
+        anim.Play(AnimationTags.landingtrigger); }
     public void Death(){
         anim.Play(AnimationTags.deathtrigger); }
 }

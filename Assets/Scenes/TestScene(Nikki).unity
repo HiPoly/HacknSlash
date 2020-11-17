@@ -1558,7 +1558,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599540026}
-  m_LocalRotation: {x: 0.106635764, y: -0.050512906, z: 0.005424454, w: 0.99299943}
+  m_LocalRotation: {x: 0.10665254, y: -0.047339372, z: 0.005083655, w: 0.9931558}
   m_LocalPosition: {x: -0.20550556, y: 0.37559438, z: -7.822368}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -7480,7 +7480,7 @@ GameObject:
   - component: {fileID: 1224280955}
   - component: {fileID: 1224280956}
   m_Layer: 9
-  m_Name: CollisionStop
+  m_Name: CollisionBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7511,8 +7511,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.8000506, z: 0.27291235}
-  m_Center: {x: 3.1728372e-16, y: 1.0573072, z: 0.08482684}
+  m_Size: {x: 1, y: 0.80005074, z: 0.5801671}
+  m_Center: {x: -1.4698563e-17, y: 1.0573072, z: 0.12396565}
 --- !u!4 &1309851470 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 23e214428f4f56242bb0a81f9b319922, type: 3}
@@ -7542,7 +7542,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1341741324}
-  m_LocalRotation: {x: 0.106635764, y: -0.050512906, z: 0.005424454, w: 0.99299943}
+  m_LocalRotation: {x: 0.10665254, y: -0.047339372, z: 0.005083655, w: 0.9931558}
   m_LocalPosition: {x: -0.20550556, y: 0.37559438, z: -7.822368}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8247,7 +8247,7 @@ GameObject:
   - component: {fileID: 1803363222}
   - component: {fileID: 1803363223}
   m_Layer: 0
-  m_Name: CollisionStop
+  m_Name: ECollisionBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8278,8 +8278,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.8000506, z: 0.27291235}
-  m_Center: {x: 3.1728372e-16, y: 1.0573072, z: 0.08482684}
+  m_Size: {x: 1, y: 0.80005074, z: 0.62993}
+  m_Center: {x: 0.000000009777614, y: 1.0573072, z: 0.04101029}
 --- !u!1 &1811239819 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8956100804277243514, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
@@ -8785,6 +8785,10 @@ PrefabInstance:
       propertyPath: EnemyLayers.m_Bits
       value: 512
       objectReference: {fileID: 0}
+    - target: {fileID: 7747775510027217242, guid: 82f964bf24318194aaa60ff211721fc6, type: 3}
+      propertyPath: CollisionBox
+      value: 
+      objectReference: {fileID: 1803363221}
     - target: {fileID: 7786470574639349020, guid: 82f964bf24318194aaa60ff211721fc6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9118,6 +9122,10 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8109610649494616081, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: CollisionBox
+      value: 
+      objectReference: {fileID: 1224280954}
     - target: {fileID: 8109610649494616083, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -9125,6 +9133,22 @@ PrefabInstance:
     - target: {fileID: 8109610649494616084, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
       propertyPath: ParryTime
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109610649494616084, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: ForceCap
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109610649494616084, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: StartingForce
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109610649494616084, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: ForceDuration
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109610649494616084, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: ForcePerHit
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8109610649494616094, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
       propertyPath: AttackRange

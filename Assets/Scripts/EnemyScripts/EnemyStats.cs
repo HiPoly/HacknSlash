@@ -18,35 +18,35 @@ public class EnemyStats : MonoBehaviour
     public int CurrentHealth;
     [SerializeField] 
     private int StartingDamage;
-    public int CurrentDamage;
+    public int CurrentDamage = 20;
     [SerializeField]
     private int StartingForce;
     public int CurrentForce;
     public int ForcePerHit;
     //GravityVars
+    private bool GravEnabled = true;
     private float ElapsedTime;
     private float GravLerpTime = 3;
     private float CurrentGrav;
     private float LowGrav = -0.25f;
-    private float MaxGrav = -1f;
+    private float MaxGrav = -3f;
     //IStateVars
     private bool Blocking;
 
-    void Start()
-    {
+    void Start(){
+        Alive = true;
         EnemyAnim = GetComponent<EnemyAnim>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        PlayerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
         CurrentHealth = StartingHealth;
         CurrentDamage = StartingDamage;
         CurrentGrav = MaxGrav;
     }
 
-    void Update()
-    {
+    void Update(){
         Grav();
         //Lerps back to standard value for gravity while the Enemy is not being hit
-         
         RemoveForceOnGround();
         //Remove continuous downward force when supported by the ground
         Goodnight();
@@ -59,46 +59,46 @@ public class EnemyStats : MonoBehaviour
 
         EnemyAnim.Hit();
         CurrentHealth -= damage;
-        if (CurrentHealth > 0)
-        {
-            rb.transform.position += Vector3.up * GameObject.Find("Player").GetComponent<PlayerStats>().CurrentForce * Time.deltaTime;
+        if (CurrentHealth > 0){
+            rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
         }
-        if (CurrentHealth <= 0)
-        {
+        if (CurrentHealth <= 0){
             Debug.Log("this thing has died");
             EnemyAnim.Death();
             Alive = false;
             GetComponent<EnemyActions>().Die();
-            GetComponent<Collider>().enabled = false;
+            if (Grounded){
+                rb.velocity = Vector3.zero;
+            }
         }
     }
-
-
-    void Grav()
-    {
-        if (ElapsedTime < GravLerpTime && transform.position.y != 0)
-        {
-            CurrentGrav = Mathf.Lerp(CurrentGrav, MaxGrav, ElapsedTime / GravLerpTime);
-            ElapsedTime += Time.deltaTime; 
+    void Grav(){
+        if (GravEnabled){
+            if (ElapsedTime < GravLerpTime && transform.position.y != 0){
+                CurrentGrav = Mathf.Lerp(CurrentGrav, MaxGrav, ElapsedTime / GravLerpTime);
+                ElapsedTime += Time.deltaTime;
+            }
+            if (!Grounded){
+                rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
+            }
         }
-        if (!Grounded)
+        if (rb.velocity.y <= -2)
         {
-            rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
+            EnemyAnim.Falling();
         }
     }
-    
-    private void RemoveForceOnGround()
-    {
-        if (transform.position.y == 0)
-        {
+    private void RemoveForceOnGround(){
+        if (transform.position.y == 0){
             rb.velocity = Vector3.zero;
         }
     }
-    private void Goodnight()
-    {
-        if (!Alive)
-        {
-
+    private void Goodnight(){
+        if (!Alive){
+            if (transform.position.y == 0){
+                rb.velocity = Vector3.zero;
+                GravEnabled = false;
+                this.enabled = false;
+            }
         }
     }
 }

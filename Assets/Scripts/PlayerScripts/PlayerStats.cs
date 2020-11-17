@@ -19,32 +19,36 @@ public class PlayerStats : MonoBehaviour
     private Animator anim;
     private Rigidbody rb;
     private EnemyStats EnemyStats;
-    //Health, Damage and Force
+    //Health & Damage
     public int StartingHealth = 200;
     public int CurrentHealth;
     [SerializeField]
     private int StartingDamage = 20 ;
     public int CurrentDamage = 20;
+    //ForceVars
     [SerializeField]
-    private int StartingForce;
-    public int CurrentForce;
-    private int CurrentForceFloat;
-    public int ForcePerHit = 20;
+    private float StartingForce;
+    [SerializeField]
+    private float ForceCap;
+    public float CurrentForce;
+    public float ForcePerHit = 20;
     private float ForceTimer;
+    [SerializeField]
     private float ForceDuration = 3;
     //GravityVars
+    private bool GravEnabled;
     private float ElapsedTime;
     private float GravLerpTime = 3;
     private float CurrentGrav;
     private float LowGrav = -0.25f;
-    private float MaxGrav = -1f;
+    private float MaxGrav = -2f;
     //Code later with Istates, use dodge for now
     //IStateVars
     private bool Blocking;
     private bool Dodging;
     private bool Sturdy;
     private float SturdyPercent;
-    private bool Alive;
+    private bool Alive = true;
     //Parry vars
     private float ParryTimer;
     [SerializeField] private float ParryTime;
@@ -53,7 +57,7 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         PlayerAnim = GetComponent<PlayerAnim>();
-        GameObject.Find("Enemy").GetComponent<EnemyStats>();
+        EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         CurrentIState = IStates.None;
@@ -75,24 +79,22 @@ public class PlayerStats : MonoBehaviour
         LerpForce();
     }
     public void Hit(int damage){
-        if (CurrentIState != IStates.Blocking && CurrentIState != IStates.Dodging){
-            if (CurrentIState == IStates.Blocking){
-                if (CanParry == true){
-                    PlayerAnim.Parry();
-                    CurrentForce += ForcePerHit;
-                }
-                return;
+        if (CurrentIState == IStates.Blocking){
+            if (CanParry == true){
+                PlayerAnim.Parry();
+                CurrentForce += ForcePerHit;
             }
+            return;
+        }
+        if (CurrentIState != IStates.Blocking && CurrentIState != IStates.Dodging){
             ElapsedTime = 0;
             CurrentGrav = LowGrav;
             PlayerAnim.Hit();
             CurrentHealth -= damage;
-            if (CurrentHealth > 0)
-            {
+            if (CurrentHealth > 0){
                 rb.transform.position += Vector3.up * EnemyStats.CurrentForce * Time.deltaTime;
             }
-            if (CurrentHealth <= 0)
-            {
+            if (CurrentHealth <= 0){
                 Debug.Log("this thing has died");
                 PlayerAnim.Death();
                 Alive = false;
@@ -126,16 +128,15 @@ public class PlayerStats : MonoBehaviour
             CurrentIState = IStates.Dodging;
         }
     }
-    void Grav()
-    {
-        if (ElapsedTime < GravLerpTime && transform.position.y != 0)
-        {
-            CurrentGrav = Mathf.Lerp(CurrentGrav, MaxGrav, ElapsedTime / GravLerpTime);
-            ElapsedTime += Time.deltaTime;
-        }
-        if (transform.position.y != 0)
-        {
-            rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
+    void Grav(){
+        if (GravEnabled){
+            if (ElapsedTime < GravLerpTime && transform.position.y != 0){
+                CurrentGrav = Mathf.Lerp(CurrentGrav, MaxGrav, ElapsedTime / GravLerpTime);
+                ElapsedTime += Time.deltaTime;
+            }
+            if (transform.position.y != 0){
+                rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
+            }
         }
     }
     private void RemoveForceOnGround()
@@ -148,8 +149,19 @@ public class PlayerStats : MonoBehaviour
     void LerpForce()
     {
         ForceTimer += Time.deltaTime / ForceDuration;
-        CurrentForceFloat = (int)Mathf.Lerp(CurrentForce, 0, ForceTimer);
-        CurrentForce = (int)CurrentForceFloat;
+        CurrentForce = Mathf.Lerp(CurrentForce, 0, ForceTimer);
+    }
+    private void Goodnight()
+    {
+        if (!Alive)
+        {
+            if (transform.position.y == 0)
+            {
+                rb.velocity = Vector3.zero;
+                GravEnabled = false;
+                this.enabled = false;
+            }
+        }
     }
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()

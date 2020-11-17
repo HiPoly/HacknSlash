@@ -31,7 +31,11 @@ public class EnemyActions : MonoBehaviour
 
     //Max Clamped height, add dying if this height is reached
     [SerializeField] private float MaxHeight = 100f;
-   
+
+    [SerializeField]
+    private GameObject CollisionBox;
+    private Collider HitBox;
+
     void Awake()
     {
         EnemyAnim = GetComponentInChildren<EnemyAnim>();
@@ -46,6 +50,7 @@ public class EnemyActions : MonoBehaviour
         CurrentAttackTime = DefaultAttackTime;
         EnemyStats = GetComponent<EnemyStats>();
         PlayerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
+        HitBox = GetComponent<Collider>();
     }
     void Update(){
         CheckHit();
@@ -106,14 +111,14 @@ public class EnemyActions : MonoBehaviour
     }
     void CheckHit()
     {
-        Collider[] HitEnemies = Physics.OverlapSphere(AttackPoint.position, AttackRange);
+        Collider[] HitPlayers = Physics.OverlapSphere(AttackPoint.position, AttackRange);
 
-        foreach (Collider Enemy in HitEnemies)
+        foreach (Collider Player in HitPlayers)
         {
             if (AttackWindow == true && Attacks > 0)
             {
-                Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<PlayerStats>().Hit(GetComponent<EnemyStats>().CurrentDamage);
+                Debug.Log("We hit Player");
+                Player.GetComponent<PlayerStats>().Hit(EnemyStats.CurrentDamage);
                 Attacks = 0;
             }
         }
@@ -145,6 +150,8 @@ public class EnemyActions : MonoBehaviour
     }
     public void Die()
     {
+        CollisionBox.SetActive(false);
+        HitBox.enabled = false;
         AttackPlayer = false;
         FollowPlayer = false;
         this.enabled = false;

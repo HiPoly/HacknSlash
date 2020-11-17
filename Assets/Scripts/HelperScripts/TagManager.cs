@@ -28,8 +28,9 @@ public class AnimationTags
     public const string chargeholdtrigger = "ChargeHold";
     public const string chargereleasetrigger = "ChargeRelease";
     //Statuses
-    public const string knockdowntrigger = "KnockDown";
-    public const string standuptrigger = "StandUp";
+    public const string fallingtrigger = "Fall";
+    public const string landingtrigger = "Land";
+    public const string standuptrigger = "Stand";
     public const string hittrigger = "Hit";
     public const string deathtrigger = "Death";
     public const string comboendtrigger = "ComboEnd";

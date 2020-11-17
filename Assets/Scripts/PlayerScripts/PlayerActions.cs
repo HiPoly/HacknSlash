@@ -35,8 +35,7 @@ public class PlayerActions : MonoBehaviour
     private BasicComboState CurrentComboState;
     private DodgeComboState CurrentDodgeState;
     //DashVars
-    [SerializeField] private float DashSpeed;
-    [SerializeField] private float StartDashTime;
+    [SerializeField] private float DodgeSpeed;
     //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
     private int Attacks = 0;
@@ -161,13 +160,9 @@ public class PlayerActions : MonoBehaviour
                 PlayerAnim.Dodge1();
                 CurrentDodgeTimer = DefaultDodgeTimer;
                 Debug.Log("PlayingDodge1");
-                //if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+                if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
                 {
-                    //rb.velocity = Vector3.left * DashSpeed * Time.deltaTime;
-                }
-                //else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
-                {
-                    //rb.velocity = Vector3.right * DashSpeed * Time.deltaTime;
+                    rb.AddForce(Vector3.forward * Time.deltaTime * DodgeSpeed);
                 }
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
@@ -175,13 +170,9 @@ public class PlayerActions : MonoBehaviour
                 PlayerAnim.Dodge2();
                 CurrentDodgeTimer = DefaultDodgeTimer;
                 Debug.Log("PlayingDodge2");
-                //if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
+                if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2"))
                 {
-                    //rb.transform.position += Vector3.left * DashSpeed * 1.5f * Time.deltaTime;
-                }
-                //else if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
-                {
-                    //rb.transform.position = Vector3.right * DashSpeed * 1.5f * Time.deltaTime;
+                    //addforce
                 }
             }
         }

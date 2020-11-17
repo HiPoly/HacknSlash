@@ -27,8 +27,10 @@ public class PlayerAnim : MonoBehaviour
         anim.SetTrigger(AnimationTags.hittrigger); }
     public void Death() {
         anim.SetTrigger(AnimationTags.deathtrigger); }
-    public void Knockdown() {
-        anim.SetTrigger(AnimationTags.knockdowntrigger); }
+    public void Fall() {
+        anim.SetTrigger(AnimationTags.fallingtrigger); }
+    public void Land() {
+        anim.SetTrigger(AnimationTags.landingtrigger); }
     public void Standup() {
         anim.SetTrigger(AnimationTags.standuptrigger); }
     //Special Attacks Sweep/Hold/Charge/Bounce

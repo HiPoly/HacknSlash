@@ -42,6 +42,8 @@ public class PlayerActions : MonoBehaviour
     //Tracking Charge Attack Requirements
     [SerializeField] private int ChargeTracker;
     [SerializeField] private int ChargeReady;
+    public GameObject ChargeWavePrefab;
+    GameObject ChargeWaveInstance;
     //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField] private float AttackRange = 0.1f;
@@ -124,12 +126,12 @@ public class PlayerActions : MonoBehaviour
     if (Input.GetMouseButtonUp(0) && ChargeTracker >= ChargeReady){
             ChargeTracker = 0;
             PlayerAnim.ChargeRelease();
+            Instantiate(ChargeWavePrefab, AttackPoint);
         }
     else if (Input.GetMouseButtonUp(0) && ChargeTracker < ChargeReady){
             ChargeTracker = 0;
         }
     }
-    
     //Dodge and Slide Abilities
     void CheckDodge()
     {
@@ -186,7 +188,6 @@ public class PlayerActions : MonoBehaviour
             PlayerAnim.Block(false);
         }
     }
-
     //Animation Events that open the hit window and allow the player to deal damage once per strike
     void OpenHit(){
         AttackWindow = true;
@@ -203,7 +204,7 @@ public class PlayerActions : MonoBehaviour
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<EnemyStats>().Hit(GetComponent<PlayerStats>().CurrentDamage);
+                Enemy.GetComponent<EnemyStats>().Hit(PlayerStats.CurrentDamage);
                 PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
                 Attacks = 0;
             }

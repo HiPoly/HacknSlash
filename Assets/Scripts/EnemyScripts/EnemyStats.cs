@@ -32,6 +32,7 @@ public class EnemyStats : MonoBehaviour
     private float MaxGrav = -3f;
     //IStateVars
     private bool Blocking;
+    private bool HitPerAttack;
 
     void Start(){
         Alive = true;
@@ -94,9 +95,10 @@ public class EnemyStats : MonoBehaviour
     }
     private void Goodnight(){
         if (!Alive){
-            if (transform.position.y == 0){
+            if (transform.position.y <= 0){
                 rb.velocity = Vector3.zero;
                 GravEnabled = false;
+                GetComponent<Rigidbody>().isKinematic = true;
                 this.enabled = false;
             }
         }

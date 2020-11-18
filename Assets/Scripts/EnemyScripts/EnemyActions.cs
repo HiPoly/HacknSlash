@@ -68,7 +68,6 @@ public class EnemyActions : MonoBehaviour
         //Look at and move to attacking range of the player 
         FollowTarget();
     }
-
     void CheckGrounded()
     {
         if (transform.position.y == 0){

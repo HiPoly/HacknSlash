@@ -7,7 +7,10 @@ public class ChargeWave : MonoBehaviour
     [SerializeField]
     private float Speed;
 
-
+    private void Start()
+    {
+        this.gameObject.SetActive(true);
+    }
     // Update is called once per frame
     void Update()
     {

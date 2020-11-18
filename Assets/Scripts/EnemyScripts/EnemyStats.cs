@@ -34,6 +34,8 @@ public class EnemyStats : MonoBehaviour
     private bool Blocking;
     private bool HitPerAttack;
 
+    public bool BeenHit;
+
     void Start(){
         Alive = true;
         EnemyAnim = GetComponent<EnemyAnim>();
@@ -44,7 +46,6 @@ public class EnemyStats : MonoBehaviour
         CurrentDamage = StartingDamage;
         CurrentGrav = MaxGrav;
     }
-
     void Update(){
         Grav();
         //Lerps back to standard value for gravity while the Enemy is not being hit
@@ -55,21 +56,24 @@ public class EnemyStats : MonoBehaviour
     }
     public void Hit(int damage)
     {
-        ElapsedTime = 0;
-        CurrentGrav = LowGrav;
-
-        EnemyAnim.Hit();
-        CurrentHealth -= damage;
-        if (CurrentHealth > 0){
-            rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
-        }
-        if (CurrentHealth <= 0){
-            Debug.Log("this thing has died");
-            EnemyAnim.Death();
-            Alive = false;
-            GetComponent<EnemyActions>().Die();
-            if (Grounded){
-                rb.velocity = Vector3.zero;
+        if (!BeenHit)
+        {
+            BeenHit = true;
+            ElapsedTime = 0;
+            CurrentGrav = LowGrav;
+            EnemyAnim.Hit();
+            CurrentHealth -= damage;
+            if (CurrentHealth > 0){
+                rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
+            }
+            if (CurrentHealth <= 0){
+                Debug.Log("this thing has died");
+                EnemyAnim.Death();
+                Alive = false;
+                GetComponent<EnemyActions>().Die();
+                if (Grounded){
+                    rb.velocity = Vector3.zero;
+                }
             }
         }
     }

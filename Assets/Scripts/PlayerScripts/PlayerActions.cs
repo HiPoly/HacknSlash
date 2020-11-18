@@ -22,6 +22,7 @@ public class PlayerActions : MonoBehaviour
         //Scripts
         [SerializeField] private PlayerAnim PlayerAnim;
         [SerializeField] private PlayerStats PlayerStats;
+    private EnemyStats EnemyStats;
     private Animator anim;
     private Rigidbody rb;
     //Timers
@@ -42,6 +43,7 @@ public class PlayerActions : MonoBehaviour
     //Tracking Charge Attack Requirements
     [SerializeField] private int ChargeTracker;
     [SerializeField] private int ChargeReady;
+    [SerializeField] private Transform ChargeWaveSpawn;
     public GameObject ChargeWavePrefab;
     GameObject ChargeWaveInstance;
     //Attacking Hitbox and Size
@@ -51,6 +53,8 @@ public class PlayerActions : MonoBehaviour
     //Max Clamped height
     [SerializeField] private float MaxHeight = 100f;
 
+    private List<EnemyStats> hitList = new List<EnemyStats>(); 
+
     private void Start(){
         CurrentComboTimer = DefaultComboTimer;
         CurrentDodgeTimer = DefaultDodgeTimer;
@@ -59,6 +63,7 @@ public class PlayerActions : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         PlayerStats = GetComponent<PlayerStats>();
+        EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
         Grounded = true;
         //DashTime = StartDashTime;
     }
@@ -126,7 +131,7 @@ public class PlayerActions : MonoBehaviour
     if (Input.GetMouseButtonUp(0) && ChargeTracker >= ChargeReady){
             ChargeTracker = 0;
             PlayerAnim.ChargeRelease();
-            Instantiate(ChargeWavePrefab, AttackPoint);
+            Instantiate(ChargeWavePrefab, ChargeWaveSpawn.position, ChargeWaveSpawn.rotation);
         }
     else if (Input.GetMouseButtonUp(0) && ChargeTracker < ChargeReady){
             ChargeTracker = 0;
@@ -164,7 +169,7 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("PlayingDodge1");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
                 {
-                    rb.AddForce(Vector3.forward * Time.deltaTime * DodgeSpeed);
+                    rb.AddForce(Vector3.right * Time.deltaTime * DodgeSpeed);
                 }
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
@@ -191,26 +196,38 @@ public class PlayerActions : MonoBehaviour
     //Animation Events that open the hit window and allow the player to deal damage once per strike
     void OpenHit(){
         AttackWindow = true;
-        Attacks = 1;}
+        //Attacks = 1;
+    }
     void CloseHit(){
         AttackWindow = false;
-        Attacks = 0;}
+        //Attacks = 0;
+        foreach (EnemyStats e in hitList)
+        {
+            e.BeenHit = false;
+
+        }
+        hitList.Clear();
+    }
     void CheckHit()
     {
         Collider[] HitEnemies = Physics.OverlapSphere(AttackPoint.position, AttackRange);
 
-        foreach(Collider Enemy in HitEnemies)
+        foreach(Collider enemy in HitEnemies)
         {
-            if (AttackWindow == true && Attacks > 0)
+            if (AttackWindow == true)
             {
-                Debug.Log("We hit " + Enemy.name);
-                Enemy.GetComponent<EnemyStats>().Hit(PlayerStats.CurrentDamage);
-                PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
-                Attacks = 0;
+                if (enemy.GetComponent<EnemyStats>() != null){
+                    Debug.Log("We hit " + enemy.name);
+                    EnemyStats e = enemy.GetComponent<EnemyStats>();
+
+                    e.Hit(PlayerStats.CurrentDamage);
+                    hitList.Add(e);
+                    PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
+                }
             }
         }
     }
-    private void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
     {   //display attack range in gizmos
         if (AttackPoint == null){
             return;

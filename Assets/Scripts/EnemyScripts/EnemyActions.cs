@@ -112,13 +112,16 @@ public class EnemyActions : MonoBehaviour
     {
         Collider[] HitPlayers = Physics.OverlapSphere(AttackPoint.position, AttackRange);
 
-        foreach (Collider Player in HitPlayers)
+        foreach (Collider player in HitPlayers)
         {
             if (AttackWindow == true && Attacks > 0)
             {
                 Debug.Log("We hit Player");
-                Player.GetComponent<PlayerStats>().Hit(EnemyStats.CurrentDamage);
-                Attacks = 0;
+                if (player.GetComponent<PlayerStats>() != null)
+                {
+                    player.GetComponent<PlayerStats>().Hit(EnemyStats.CurrentDamage);
+                    Attacks = 0;
+                }
             }
         }
     }

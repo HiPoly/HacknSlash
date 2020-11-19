@@ -22,7 +22,9 @@ public class PlayerAnim : MonoBehaviour
         anim.SetBool(AnimationTags.blockingbool, blocking); }
     public void Parry() {
         anim.SetTrigger(AnimationTags.parrytrigger); }
-    //Reactions Hit/Death/Knockdown/Standup
+    //Reactions Recoil/Hit/Death/Knockdown/Standup
+    public void Recoil(){
+        anim.SetTrigger(AnimationTags.recoiltrigger); }
     public void Hit() {
         anim.SetTrigger(AnimationTags.hittrigger); }
     public void Death() {

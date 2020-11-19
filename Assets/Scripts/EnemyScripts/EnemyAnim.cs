@@ -26,6 +26,8 @@ public class EnemyAnim : MonoBehaviour
         anim.Play(AnimationTags.standuptrigger); }
     public void Hit(){
         anim.Play(AnimationTags.hittrigger); }
+    public void Recoil(){
+        anim.Play(AnimationTags.recoiltrigger); }
     public void Falling(){
         anim.Play(AnimationTags.fallingtrigger); }
     public void Land(){

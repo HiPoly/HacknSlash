@@ -39,15 +39,21 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float DodgeSpeed;
     //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
-    private int Attacks = 0;
     //Tracking Charge Attack Requirements
-    [SerializeField] private int ChargeTracker;
+    private int ChargeTracker;
     [SerializeField] private int ChargeReady;
     [SerializeField] private Transform ChargeWaveSpawn;
     public GameObject ChargeWavePrefab;
     GameObject ChargeWaveInstance;
     //Attacking Hitbox and Size
     public Transform AttackPoint;
+    [SerializeField]
+    private Transform AttackPointLeg;
+    [SerializeField]
+    private Transform AttackPointBlade;
+    [SerializeField]
+    private Transform AttackPointAoE;
+
     [SerializeField] private float AttackRange = 0.1f;
     public LayerMask EnemyLayers;
     //Max Clamped height
@@ -77,11 +83,10 @@ public class PlayerActions : MonoBehaviour
         //Check inputs for dodge related actions
         ResetComboState();
         //Check For timed out dodge and attack combos
-        CheckBlock();
-        //Check inputs for blocking actions
         CheckGrounded();
         //Check if the player's rigidbody is at y: 0
         ClampY();
+        //clamps the y position to >= 0 
     }
     void CheckAttack()
     {
@@ -91,18 +96,26 @@ public class PlayerActions : MonoBehaviour
             if (Input.GetKey(KeyCode.S) && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
                 PlayerAnim.Sweep();
                 Debug.Log("I am performing SWEEP");
+                AttackPoint = AttackPointBlade;
+                AttackRange = 0.1f;
                 return; }//Sweep
             else if (Input.GetKey(KeyCode.W)){
                 PlayerAnim.Hold();
                 Debug.Log("I am performing HOLD");
+                AttackPoint = AttackPointLeg;
+                AttackRange = 0.1f;
                 return; }//Air-Hold
             else if (Input.GetKey(KeyCode.S) && (!Grounded)){
                 PlayerAnim.Bounce();
                 Debug.Log("I am performing BOUNCE");
+                AttackPoint = AttackPointAoE;
+                AttackRange = 1;
                 return; }//Bounce
             if (Grounded){
-                    CurrentComboState++;
-                    activateComboTimerToReset = true;
+                CurrentComboState++;
+                activateComboTimerToReset = true;
+                AttackPoint = AttackPointBlade;
+                AttackRange = 0.1f;
                 //BasicComboCheck
                 if (CurrentComboState == BasicComboState.Basic1){
                     PlayerAnim.Basic1();
@@ -142,13 +155,11 @@ public class PlayerActions : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {   // check if dodge sequence completed
-            if (CurrentDodgeState >= DodgeComboState.Dodge2)
-            {
+            if (CurrentDodgeState >= DodgeComboState.Dodge2){
                 return;
             }
             //Check for Special Inputs
-            else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0))
-            {
+            else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
                 PlayerAnim.Slide();
                 Debug.Log("I should be sliding");
                 return;
@@ -182,15 +193,6 @@ public class PlayerActions : MonoBehaviour
                     //addforce
                 }
             }
-        }
-    }
-    void CheckBlock()
-    {   //Set Animations
-        if (Input.GetMouseButton(1)){
-            PlayerAnim.Block(true);
-        }
-        else{
-            PlayerAnim.Block(false);
         }
     }
     //Animation Events that open the hit window and allow the player to deal damage once per strike

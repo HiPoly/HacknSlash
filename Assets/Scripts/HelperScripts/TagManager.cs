@@ -34,6 +34,7 @@ public class AnimationTags
     public const string hittrigger = "Hit";
     public const string deathtrigger = "Death";
     public const string comboendtrigger = "ComboEnd";
+    public const string recoiltrigger = "Recoil";
 }
 public class Axis
 {

@@ -16,6 +16,7 @@ public class PlayerStats : MonoBehaviour
     private IStates CurrentIState;
     //Fetched Components
     private PlayerAnim PlayerAnim;
+    private EnemyAnim EnemyAnim;
     private Animator anim;
     private Rigidbody rb;
     private EnemyStats EnemyStats;
@@ -57,6 +58,7 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         PlayerAnim = GetComponent<PlayerAnim>();
+        EnemyAnim = GameObject.Find("Enemy").GetComponent<EnemyAnim>();
         EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -77,16 +79,23 @@ public class PlayerStats : MonoBehaviour
         RemoveForceOnGround();
         //Remove continuous downward force when supported by the ground
         LerpForce();
+        //Force Decays at a constant rate while not attacking
+        CheckBlock();
+        //Control Blocking Animation and set blocking bool
     }
     public void Hit(int damage){
+        if (CurrentIState == IStates.Dodging)
+        {
+            return;
+        }
         if (CurrentIState == IStates.Blocking){
             if (CanParry == true){
                 PlayerAnim.Parry();
                 CurrentForce += ForcePerHit;
             }
+            GetComponent<EnemyAnim>().Recoil();
             return;
         }
-        if (CurrentIState != IStates.Blocking && CurrentIState != IStates.Dodging){
             ElapsedTime = 0;
             CurrentGrav = LowGrav;
             PlayerAnim.Hit();
@@ -100,10 +109,20 @@ public class PlayerStats : MonoBehaviour
                 Alive = false;
                 GetComponent<Collider>().enabled = false;
             }
+    }
+    void CheckBlock()
+    {   //Set Animations
+        if (Input.GetMouseButton(1)){
+            PlayerAnim.Block(true);
+            Blocking = true;
+        }
+        else{
+            PlayerAnim.Block(false);
+            Blocking = false;
         }
     }
     void CheckParry(){
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Blocking")){
+        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Block")){
             ParryTimer += Time.deltaTime;
         }
         else{
@@ -115,17 +134,20 @@ public class PlayerStats : MonoBehaviour
     }
     private void CheckIState(){
         //Set IStates while animations are playing
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Blocking")){
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Block")){
             CurrentIState = IStates.Blocking;
         }
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1")){
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1")){
             CurrentIState = IStates.Dodging;
         }
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2")){
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2")){
             CurrentIState = IStates.Dodging;
         }
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Slide")){
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Slide")){
             CurrentIState = IStates.Dodging;
+        }
+        else{
+            CurrentIState = IStates.None;
         }
     }
     void Grav(){

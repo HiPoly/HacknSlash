@@ -58,7 +58,6 @@ public class PlayerActions : MonoBehaviour
     public LayerMask EnemyLayers;
     //Max Clamped height
     [SerializeField] private float MaxHeight = 100f;
-
     private List<EnemyStats> hitList = new List<EnemyStats>(); 
 
     private void Start(){
@@ -86,7 +85,7 @@ public class PlayerActions : MonoBehaviour
         CheckGrounded();
         //Check if the player's rigidbody is at y: 0
         ClampY();
-        //clamps the y position to >= 0 
+        //clamps the y position to >= 0
     }
     void CheckAttack()
     {
@@ -109,14 +108,14 @@ public class PlayerActions : MonoBehaviour
                 PlayerAnim.Bounce();
                 Debug.Log("I am performing BOUNCE");
                 AttackPoint = AttackPointAoE;
-                AttackRange = 1;
+                AttackRange = 0.65f;
                 return; }//Bounce
             if (Grounded){
+                
                 CurrentComboState++;
                 activateComboTimerToReset = true;
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
-                //BasicComboCheck
                 if (CurrentComboState == BasicComboState.Basic1){
                     PlayerAnim.Basic1();
                     Debug.Log("PlayingBasic1");

@@ -10,6 +10,14 @@ public class PlayerAnim : MonoBehaviour
     {
         anim = GetComponent<Animator>();
     }
+
+    void Start()
+    {
+
+    }
+
+
+
     //Movement Walking/Running/Crouching/Blocking
     public void Run(bool running) {
         anim.SetBool(AnimationTags.runningbool, running); }

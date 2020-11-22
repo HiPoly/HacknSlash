@@ -2605,6 +2605,7 @@ GameObject:
   - component: {fileID: 8109610649494616081}
   - component: {fileID: 8109610649494616085}
   - component: {fileID: 8109610649494616084}
+  - component: {fileID: 1763835951853762327}
   - component: {fileID: 7494176680800800134}
   m_Layer: 9
   m_Name: Player
@@ -2689,6 +2690,7 @@ MonoBehaviour:
   AttackPoint: {fileID: 8109610648760504132}
   AttackPointLeg: {fileID: 356613505}
   AttackPointBlade: {fileID: 8109610648760504132}
+  AttackPointAoE: {fileID: 0}
   AttackRange: 0.1
   EnemyLayers:
     serializedVersion: 2
@@ -2742,6 +2744,43 @@ MonoBehaviour:
   ForcePerHit: 40
   ForceDuration: 1000
   ParryTime: 0.5
+--- !u!114 &1763835951853762327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8956100804277243514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea32a55a3fc65bc4e9238b0691bc8746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Idle: {fileID: -203655887218126122, guid: 0d6125dbd445df64582356cf426fdf26, type: 3}
+  Walk: {fileID: 7400000, guid: 9d8a5bfeacb832340952d4509295e5fe, type: 2}
+  Run: {fileID: 7400000, guid: 5d03e0ce4bc27d541b966e4a910cb70c, type: 2}
+  Crouch: {fileID: -203655887218126122, guid: 9465357cc3453a44eb0b10123f67b22c, type: 3}
+  Block: {fileID: -203655887218126122, guid: 12fd30fd16a34d54d8fd9cb385f7d3fc, type: 3}
+  Parry: {fileID: -203655887218126122, guid: 0ed64716eaf48e94fb853d3837b676c7, type: 3}
+  Recoil: {fileID: 0}
+  Hit: {fileID: 7400000, guid: 69a22419b5cafd3408f56e38abd9347f, type: 2}
+  Death: {fileID: -203655887218126122, guid: 8d1c9ef710c5b02438aa0bea8822b39a, type: 3}
+  Fall: {fileID: 7400000, guid: 4b9c909cb50b0f94f8e190d29d0f446a, type: 2}
+  Land: {fileID: 7400000, guid: 3ab468787edb6d5458bff9ad8f839496, type: 2}
+  Stand: {fileID: -203655887218126122, guid: 91065a55ee1215046be90783c9a479c6, type: 3}
+  Sweep: {fileID: 7400000, guid: 1ff0cbcc8a8ed5444a6f24641e89d012, type: 2}
+  Hold: {fileID: 7400000, guid: 6a8ac42498f497e4fa7126588304de20, type: 2}
+  ChargeHold: {fileID: -203655887218126122, guid: 43cede76e89f08a48a3659999459e12c, type: 3}
+  ChargeRelease: {fileID: 4648237352234670273, guid: 43cede76e89f08a48a3659999459e12c, type: 3}
+  Bounce: {fileID: 7400000, guid: 2deadc0e46827834cb19dd89b310ec32, type: 2}
+  Basic1: {fileID: 7400000, guid: f1771731a7093f147bc92a65d6b28c0c, type: 2}
+  Basic2: {fileID: 7400000, guid: 17e8698695c244049a2bbe2699677a0e, type: 2}
+  Basic3: {fileID: 7400000, guid: 5273f43d7630966479412188d8a56e6a, type: 2}
+  Dodge1: {fileID: 7400000, guid: 24f334552383b9e43b8eef03d1179ef9, type: 2}
+  Dodge2: {fileID: -203655887218126122, guid: 30e70f3bbfaba0a4c85896db011b40b2, type: 3}
+  Slide: {fileID: 7400000, guid: f1840e3e6ab117c4e9dce6575d351ff1, type: 2}
+  Jump: {fileID: 7400000, guid: 6a554a04ac423c64da390d82425651a7, type: 2}
+  Recovery: {fileID: -203655887218126122, guid: d76e92dc618932a49af591b6faf38fec, type: 3}
 --- !u!65 &7494176680800800134
 BoxCollider:
   m_ObjectHideFlags: 0

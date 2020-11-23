@@ -9,9 +9,9 @@ public class AnimList : MonoBehaviour
     public AnimationClip Idle = null;
     public AnimationClip Walk = null;
     public AnimationClip Run = null;
-    public AnimationClip Crouch =null;
+    public AnimationClip Crouch = null;
     public AnimationClip Block = null;
-    public AnimationClip Parry= null;
+    public AnimationClip Parry = null;
     public AnimationClip Recoil = null;
     public AnimationClip Hit = null;
     public AnimationClip Death = null;

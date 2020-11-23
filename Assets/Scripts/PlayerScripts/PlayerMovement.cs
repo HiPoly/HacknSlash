@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private float rotationSpeed = 15f;
     [SerializeField]
     private GameObject CollisionBox;
+    public bool Moving;
+    private bool Running;
 
     void Awake()
     {
@@ -50,50 +52,59 @@ public class PlayerMovement : MonoBehaviour
                  playerBody.velocity.y,
                  playerBody.velocity.z);
             }
-
         }
     }
     void RotatePlayer()
     {
         if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
         {
-            transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY) * rotationSpeed, 0f);
+            transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY) * rotationSpeed * Time.deltaTime, 0f);
         }
         else if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
         {
-            transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY) * rotationSpeed, 0f);
+            transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY) * rotationSpeed * Time.deltaTime, 0f);
         }
     }
     void CheckCrouch()
     {
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKeyUp(KeyCode.S) && transform.position.y == 0)
         {
-            PlayerAnim.Crouch(true);
+            PlayerAnim.ChangeState(AnimationTags.crouch);
         }
-        if (Input.GetKeyUp(KeyCode.S))
-            PlayerAnim.Crouch(false);
     }
     void CheckWalk()
     {
         if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
-            PlayerAnim.Walk(true);
+            if (Running){
+                PlayerAnim.ChangeState(AnimationTags.run);
             }
+            else{
+                PlayerAnim.ChangeState(AnimationTags.walk);
+            }
+            Moving = true;
+        }
         else if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
-            PlayerAnim.Walk(true);
+            if (Running){
+                PlayerAnim.ChangeState(AnimationTags.run);
             }
+            else{
+                PlayerAnim.ChangeState(AnimationTags.walk);
+            }
+            Moving = true;
+        }
         else {
-            PlayerAnim.Walk(false);
+            Moving = false;
         }
     }
     void CheckRun()
     {
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            PlayerAnim.Run(true);
+            Running = true;
         }
-        else
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            PlayerAnim.Run(false);
+            Running = false;
         }
     }
     void CheckDodge()

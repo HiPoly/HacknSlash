@@ -91,7 +91,7 @@ public class InputLogger : MonoBehaviour
         //If InputList[0] = "Up"{
         //Set 'image1' to UpArrow.png
 
-        foreach (string element in InputList) ;
+        foreach (string element in InputList)
         {
 
         }

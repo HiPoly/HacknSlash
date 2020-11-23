@@ -18,6 +18,7 @@ public enum DodgeComboState{
 public class PlayerActions : MonoBehaviour
 {   //misc
     private bool Grounded;
+    public bool Acting;
     //Fetched Components
         //Scripts
         [SerializeField] private PlayerAnim PlayerAnim;
@@ -32,6 +33,7 @@ public class PlayerActions : MonoBehaviour
     private float CurrentComboTimer;
     private float DefaultDodgeTimer = 1f;
     private float CurrentDodgeTimer;
+    private float ActionTimer;
     //Enums
     private BasicComboState CurrentComboState;
     private DodgeComboState CurrentDodgeState;
@@ -93,57 +95,67 @@ public class PlayerActions : MonoBehaviour
         {
             //SpecialMoveCheck
             if (Input.GetKey(KeyCode.S) && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
-                PlayerAnim.Sweep();
+                PlayerAnim.ChangeState("Sweep");
                 Debug.Log("I am performing SWEEP");
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Sweep
             else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.Hold();
+                PlayerAnim.ChangeState("Hold"); ;
                 Debug.Log("I am performing HOLD");
                 AttackPoint = AttackPointLeg;
                 AttackRange = 0.1f;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Air-Hold
             else if (Input.GetKey(KeyCode.S) && (!Grounded)){
-                PlayerAnim.Bounce();
+                PlayerAnim.ChangeState("Bounce"); ;
                 Debug.Log("I am performing BOUNCE");
                 AttackPoint = AttackPointAoE;
                 AttackRange = 0.65f;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Bounce
             if (Grounded){
-                
                 CurrentComboState++;
                 activateComboTimerToReset = true;
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
                 if (CurrentComboState == BasicComboState.Basic1){
-                    PlayerAnim.Basic1();
+                    PlayerAnim.ChangeState("basic1");
                     Debug.Log("PlayingBasic1");
-                    CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
+                    CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+                    ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
                 else if (CurrentComboState == BasicComboState.Basic2){
-                    PlayerAnim.Basic2();
+                    PlayerAnim.ChangeState("Basic2");
                     Debug.Log("PlayingBasic2");
-                    CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
+                    CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+                    ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
                 else if (CurrentComboState == BasicComboState.Basic3){
-                    PlayerAnim.Basic3();
+                    PlayerAnim.ChangeState("Basic3");
                     Debug.Log("PlayingBasic3");
-                    CurrentComboTimer = DefaultComboTimer; //Change This to Time of Animation
+                    CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+                    ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
             }
+        }
+        else
+        {
+            Acting = false;
         }
     //ChargeAttackCheck
     if (Input.GetMouseButton(0)) {
             ChargeTracker = ChargeTracker + 1;
         }
     if (ChargeTracker >= ChargeReady) {
-            PlayerAnim.ChargeHold();
+            PlayerAnim.ChangeState("ChargeHold");
         }
     if (Input.GetMouseButtonUp(0) && ChargeTracker >= ChargeReady){
             ChargeTracker = 0;
-            PlayerAnim.ChargeRelease();
+            PlayerAnim.ChangeState("ChargeRelease");
             Instantiate(ChargeWavePrefab, ChargeWaveSpawn.position, ChargeWaveSpawn.rotation);
+            ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
         }
     else if (Input.GetMouseButtonUp(0) && ChargeTracker < ChargeReady){
             ChargeTracker = 0;
@@ -159,12 +171,12 @@ public class PlayerActions : MonoBehaviour
             }
             //Check for Special Inputs
             else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
-                PlayerAnim.Slide();
+                PlayerAnim.ChangeState("Slide"); ;
                 Debug.Log("I should be sliding");
                 return;
             }
             else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.Jump();
+                PlayerAnim.ChangeState("Jump");
                 Debug.Log("I am Jumping");
                 return;
             }
@@ -174,7 +186,7 @@ public class PlayerActions : MonoBehaviour
 
             if (CurrentDodgeState == DodgeComboState.Dodge1)
             {
-                PlayerAnim.Dodge1();
+                PlayerAnim.ChangeState("Dodge1");
                 CurrentDodgeTimer = DefaultDodgeTimer;
                 Debug.Log("PlayingDodge1");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
@@ -184,12 +196,12 @@ public class PlayerActions : MonoBehaviour
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
             {
-                PlayerAnim.Dodge2();
+                PlayerAnim.ChangeState("Dodge2"); ;
                 CurrentDodgeTimer = DefaultDodgeTimer;
                 Debug.Log("PlayingDodge2");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2"))
                 {
-                    //addforce
+                    //addforce while dodging 
                 }
             }
         }
@@ -243,8 +255,8 @@ public class PlayerActions : MonoBehaviour
             {
                 Debug.Log("BasicComboTimeout");
                 CurrentComboState = BasicComboState.None;
+                PlayerAnim.ChangeState(AnimationTags.idle);
                 activateComboTimerToReset = false;
-                PlayerAnim.ComboEnd();
             }
         }
         if (activateDodgeTimerToReset)
@@ -255,8 +267,11 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("DodgeComboTimeout");
                 CurrentDodgeState = DodgeComboState.None;
                 activateDodgeTimerToReset = false;
-                PlayerAnim.ComboEnd();
             }
+        }
+        if (ActionTimer <= 0)
+        {
+            Acting = false;
         }
     }
     void ClampY(){

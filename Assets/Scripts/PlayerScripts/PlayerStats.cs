@@ -55,13 +55,16 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float ParryTime;
     private bool CanParry = false;
 
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     void Start()
     {
         PlayerAnim = GetComponent<PlayerAnim>();
         EnemyAnim = GameObject.Find("Enemy").GetComponent<EnemyAnim>();
         EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
         anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
         CurrentIState = IStates.None;
         CurrentHealth = StartingHealth;
         CurrentDamage = StartingDamage;
@@ -90,7 +93,7 @@ public class PlayerStats : MonoBehaviour
         }
         if (CurrentIState == IStates.Blocking){
             if (CanParry == true){
-                PlayerAnim.Parry();
+                PlayerAnim.ChangeState("Parry");
                 CurrentForce += ForcePerHit;
             }
             GetComponent<EnemyAnim>().Recoil();
@@ -98,14 +101,14 @@ public class PlayerStats : MonoBehaviour
         }
             ElapsedTime = 0;
             CurrentGrav = LowGrav;
-            PlayerAnim.Hit();
+            PlayerAnim.ChangeState("Hit");
             CurrentHealth -= damage;
             if (CurrentHealth > 0){
                 rb.transform.position += Vector3.up * EnemyStats.CurrentForce * Time.deltaTime;
             }
             if (CurrentHealth <= 0){
                 Debug.Log("this thing has died");
-                PlayerAnim.Death();
+                PlayerAnim.ChangeState("Death");
                 Alive = false;
                 GetComponent<Collider>().enabled = false;
             }
@@ -113,37 +116,39 @@ public class PlayerStats : MonoBehaviour
     void CheckBlock()
     {   //Set Animations
         if (Input.GetMouseButton(1)){
-            PlayerAnim.Block(true);
+            PlayerAnim.ChangeState("Block");
             Blocking = true;
         }
         else{
-            PlayerAnim.Block(false);
+            PlayerAnim.ChangeState("Idle");
             Blocking = false;
         }
     }
     void CheckParry(){
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Block")){
+        if (GetComponent<PlayerAnim>().currentState == "Block"){
             ParryTimer += Time.deltaTime;
         }
         else{
             ParryTimer = 0;
         }
         if (ParryTimer <= ParryTime){
-        CanParry = true;
+            CanParry = true;
         }
     }
     private void CheckIState(){
         //Set IStates while animations are playing
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Block")){
+        if (GetComponent<PlayerAnim>().currentState == "Block"){
             CurrentIState = IStates.Blocking;
         }
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1")){
+        else if (GetComponent<PlayerAnim>().currentState == "Dodge1")
+        {
             CurrentIState = IStates.Dodging;
         }
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2")){
+        else if (GetComponent<PlayerAnim>().currentState == "Dodge2"){
             CurrentIState = IStates.Dodging;
         }
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Slide")){
+        else if (GetComponent<PlayerAnim>().currentState == "Slide")
+        {
             CurrentIState = IStates.Dodging;
         }
         else{
@@ -166,6 +171,7 @@ public class PlayerStats : MonoBehaviour
         if (transform.position.y == 0)
         {
             rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
     void LerpForce()

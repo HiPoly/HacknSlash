@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     private Animator anim;
     public float walkSpeed = 100f;
     private float rotationY = -90;
-    private float rotationSpeed = 15f;
     [SerializeField]
     private GameObject CollisionBox;
     public bool Moving;
@@ -23,10 +22,10 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        RotatePlayer();
-        CheckCrouch();
         CheckWalk();
         CheckRun();
+        RotatePlayer();
+        CheckCrouch();
         CheckDodge();
     }
     void FixedUpdate()
@@ -58,37 +57,48 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetAxisRaw(Axis.horizontalaxis) > 0)
         {
-            transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY) * rotationSpeed * Time.deltaTime, 0f);
+            transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY), 0f);
         }
         else if (Input.GetAxisRaw(Axis.horizontalaxis) < 0)
         {
-            transform.rotation = Quaternion.Euler(0f, Mathf.Abs(rotationY) * rotationSpeed * Time.deltaTime, 0f);
+            transform.rotation = Quaternion.Euler(0f, -Mathf.Abs(rotationY), 0f);
         }
     }
     void CheckCrouch()
     {
-        if (Input.GetKeyUp(KeyCode.S) && transform.position.y == 0)
+        if (Input.GetKey(KeyCode.S) && transform.position.y == 0)
         {
-            PlayerAnim.ChangeState(AnimationTags.crouch);
+            PlayerAnim.ChangeState(AnimationTags.crouch, 0.1f);
+            Moving = true;
         }
     }
     void CheckWalk()
     {
-        if (Input.GetKey(KeyCode.A) && !Input.GetKeyDown(KeyCode.S)) {
-            if (Running){
-                PlayerAnim.ChangeState(AnimationTags.run);
+        if (Input.GetKey(KeyCode.A) 
+        && !Input.GetKeyDown(KeyCode.S)
+        && GetComponent<PlayerActions>().Acting == false) 
+        {
+            if (Running) 
+            {
+                PlayerAnim.ChangeState(AnimationTags.run, 0.2f);
             }
-            else{
-                PlayerAnim.ChangeState(AnimationTags.walk);
+            else 
+            {                    
+                PlayerAnim.ChangeState(AnimationTags.walk, 0.1f);
             }
             Moving = true;
         }
-        else if (Input.GetKey(KeyCode.D) && !Input.GetKeyDown(KeyCode.S)){
-            if (Running){
-                PlayerAnim.ChangeState(AnimationTags.run);
+        else if (Input.GetKey(KeyCode.D)
+        && !Input.GetKeyDown(KeyCode.S)
+        && GetComponent<PlayerActions>().Acting == false)
+        {
+            if (Running)
+            {
+                PlayerAnim.ChangeState(AnimationTags.run, 0.2f);
             }
-            else{
-                PlayerAnim.ChangeState(AnimationTags.walk);
+            else
+            {
+                PlayerAnim.ChangeState(AnimationTags.walk, 0.1f);
             }
             Moving = true;
         }

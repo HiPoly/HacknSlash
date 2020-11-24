@@ -33,6 +33,7 @@ public class PlayerActions : MonoBehaviour
     private float CurrentComboTimer;
     private float DefaultDodgeTimer = 1f;
     private float CurrentDodgeTimer;
+    [SerializeField]
     private float ActionTimer;
     //Enums
     private BasicComboState CurrentComboState;
@@ -50,11 +51,11 @@ public class PlayerActions : MonoBehaviour
     //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField]
-    private Transform AttackPointLeg;
+    private Transform AttackPointLeg = null;
     [SerializeField]
-    private Transform AttackPointBlade;
+    private Transform AttackPointBlade = null;
     [SerializeField]
-    private Transform AttackPointAoE;
+    private Transform AttackPointAoE = null;
 
     [SerializeField] private float AttackRange = 0.1f;
     public LayerMask EnemyLayers;
@@ -70,7 +71,7 @@ public class PlayerActions : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         PlayerStats = GetComponent<PlayerStats>();
-        EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
+        //EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
         Grounded = true;
         //DashTime = StartDashTime;
     }
@@ -95,21 +96,21 @@ public class PlayerActions : MonoBehaviour
         {
             //SpecialMoveCheck
             if (Input.GetKey(KeyCode.S) && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
-                PlayerAnim.ChangeState("Sweep");
+                PlayerAnim.ChangeState("Sweep", 0, 1);
                 Debug.Log("I am performing SWEEP");
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Sweep
             else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.ChangeState("Hold"); ;
+                PlayerAnim.ChangeState("Hold", 0, 1); ;
                 Debug.Log("I am performing HOLD");
                 AttackPoint = AttackPointLeg;
                 AttackRange = 0.1f;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Air-Hold
             else if (Input.GetKey(KeyCode.S) && (!Grounded)){
-                PlayerAnim.ChangeState("Bounce"); ;
+                PlayerAnim.ChangeState("Bounce", 0, 1); ;
                 Debug.Log("I am performing BOUNCE");
                 AttackPoint = AttackPointAoE;
                 AttackRange = 0.65f;
@@ -121,28 +122,24 @@ public class PlayerActions : MonoBehaviour
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
                 if (CurrentComboState == BasicComboState.Basic1){
-                    PlayerAnim.ChangeState("basic1");
+                    PlayerAnim.ChangeState("Basic1", 0.1f, 1);
                     Debug.Log("PlayingBasic1");
                     CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                     ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
                 else if (CurrentComboState == BasicComboState.Basic2){
-                    PlayerAnim.ChangeState("Basic2");
+                    PlayerAnim.ChangeState("Basic2", 0.1f, 1);
                     Debug.Log("PlayingBasic2");
                     CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                     ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
                 else if (CurrentComboState == BasicComboState.Basic3){
-                    PlayerAnim.ChangeState("Basic3");
+                    PlayerAnim.ChangeState("Basic3", 0.1f, 1);
                     Debug.Log("PlayingBasic3");
                     CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                     ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
             }
-        }
-        else
-        {
-            Acting = false;
         }
     //ChargeAttackCheck
     if (Input.GetMouseButton(0)) {
@@ -171,12 +168,13 @@ public class PlayerActions : MonoBehaviour
             }
             //Check for Special Inputs
             else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
-                PlayerAnim.ChangeState("Slide"); ;
+                PlayerAnim.ChangeState("Slide", 0.1f, 1);
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 Debug.Log("I should be sliding");
                 return;
             }
             else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.ChangeState("Jump");
+                PlayerAnim.ChangeState("Jump", 0, 1);
                 Debug.Log("I am Jumping");
                 return;
             }
@@ -186,8 +184,9 @@ public class PlayerActions : MonoBehaviour
 
             if (CurrentDodgeState == DodgeComboState.Dodge1)
             {
-                PlayerAnim.ChangeState("Dodge1");
+                PlayerAnim.ChangeState("Dodge1", 0.1f, 1);
                 CurrentDodgeTimer = DefaultDodgeTimer;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 Debug.Log("PlayingDodge1");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
                 {
@@ -196,8 +195,9 @@ public class PlayerActions : MonoBehaviour
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
             {
-                PlayerAnim.ChangeState("Dodge2"); ;
+                PlayerAnim.ChangeState("Dodge2", 0.1f, 1);
                 CurrentDodgeTimer = DefaultDodgeTimer;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 Debug.Log("PlayingDodge2");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2"))
                 {
@@ -217,7 +217,6 @@ public class PlayerActions : MonoBehaviour
         foreach (EnemyStats e in hitList)
         {
             e.BeenHit = false;
-
         }
         hitList.Clear();
     }
@@ -255,7 +254,6 @@ public class PlayerActions : MonoBehaviour
             {
                 Debug.Log("BasicComboTimeout");
                 CurrentComboState = BasicComboState.None;
-                PlayerAnim.ChangeState(AnimationTags.idle);
                 activateComboTimerToReset = false;
             }
         }
@@ -269,7 +267,13 @@ public class PlayerActions : MonoBehaviour
                 activateDodgeTimerToReset = false;
             }
         }
-        if (ActionTimer <= 0)
+        
+        if (ActionTimer > 0)
+        {
+            Acting = true;
+            ActionTimer -= Time.deltaTime;
+        }
+        else
         {
             Acting = false;
         }

@@ -8888,6 +8888,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8109610649494616080, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8109610649494616080, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8109610649494616094, guid: f04e54de2bb5568479ea34cbb62a1718, type: 3}
       propertyPath: AttackPoint
       value: 

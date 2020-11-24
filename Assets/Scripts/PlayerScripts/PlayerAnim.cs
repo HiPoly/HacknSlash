@@ -7,7 +7,8 @@ public class PlayerAnim : MonoBehaviour
 {   //
     private Animator anim;
     public string currentState;
-    
+    public int currentPriority;
+
     //Activates while the player shouldnt be returning to idle
     public bool Busy;
 
@@ -41,35 +42,52 @@ public class PlayerAnim : MonoBehaviour
     void Awake(){
         anim = GetComponent<Animator>();
     }
-    public void ChangeState(string newState)
+    public void ChangeState(string newState, float blendTime = 0, int Priority = 0)
     {
         //Stop the same animation from interrupting itself
         if (currentState == newState){
             return; }
-        //Play the animation
-        anim.Play(newState);
-        //Reassign the current state
-        currentState = newState;
-    }
 
+        if (Priority >= currentPriority)
+        {
+            if (blendTime > 0){
+                //blend animation with specified time
+                anim.CrossFade(newState, blendTime);
+            }
+            else{
+                //Play the animation
+                anim.Play(newState);
+            }
+        }
+        //If priority animations are finished playing reset priority to neutral
+        if (!animIsPlaying()){
+            currentPriority = 0;
+        }
+        //Reassign the current state and priority
+        currentState = newState;
+        currentPriority = Priority;
+    }
     private void Update()
     {
         CheckIdle();
         //Checks if the player is moving or attacking and can transition to idle
+        animIsPlaying();
     }
-
     void CheckIdle()
     {
-        if (GetComponent<PlayerActions>().Acting == false 
-            && GetComponent<PlayerMovement>().Moving == false 
-            && transform.position.y == 0)
+        if (GetComponent<PlayerActions>().Acting == false
+            && GetComponent<PlayerMovement>().Moving == false
+            && GetComponent<PlayerStats>().Blocking == false
+            //&& transform.position.y == 0
+            )
         {
-            ChangeState(AnimationTags.idle);
+            ChangeState(AnimationTags.idle, 0.325f);
         }
     }
-
-    private void CheckActions()
+    bool animIsPlaying()
     {
+        return anim.GetCurrentAnimatorStateInfo(0).length >
+            anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
     }
 
 

@@ -45,7 +45,7 @@ public class PlayerStats : MonoBehaviour
     private float MaxGrav = -2f;
     //Code later with Istates, use dodge for now
     //IStateVars
-    private bool Blocking;
+    public bool Blocking;
     private bool Dodging;
     private bool Sturdy;
     private float SturdyPercent;
@@ -62,8 +62,8 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         PlayerAnim = GetComponent<PlayerAnim>();
-        EnemyAnim = GameObject.Find("Enemy").GetComponent<EnemyAnim>();
-        EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
+        //EnemyAnim = GameObject.Find("Enemy").GetComponent<EnemyAnim>();
+        //EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
         anim = GetComponent<Animator>();
         CurrentIState = IStates.None;
         CurrentHealth = StartingHealth;
@@ -120,7 +120,7 @@ public class PlayerStats : MonoBehaviour
             Blocking = true;
         }
         else{
-            PlayerAnim.ChangeState("Idle");
+            //PlayerAnim.ChangeState("Idle");
             Blocking = false;
         }
     }

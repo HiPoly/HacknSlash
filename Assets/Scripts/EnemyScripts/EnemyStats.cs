@@ -64,8 +64,11 @@ public class EnemyStats : MonoBehaviour
             EnemyAnim.Hit();
             CurrentHealth -= damage;
             if (CurrentHealth > 0){
-                rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
+                //Direct Translation Version
+                //rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
+                rb.AddForce(Vector3.up * PlayerStats.CurrentForce);
             }
+            GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
             if (CurrentHealth <= 0){
                 Debug.Log("this thing has died");
                 EnemyAnim.Death();

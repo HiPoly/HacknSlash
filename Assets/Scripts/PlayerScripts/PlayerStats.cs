@@ -104,8 +104,11 @@ public class PlayerStats : MonoBehaviour
             PlayerAnim.ChangeState("Hit");
             CurrentHealth -= damage;
             if (CurrentHealth > 0){
-                rb.transform.position += Vector3.up * EnemyStats.CurrentForce * Time.deltaTime;
+                //Direct Translation Version
+                //rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
+                rb.AddForce(Vector3.up * EnemyStats.CurrentForce);
             }
+            GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
             if (CurrentHealth <= 0){
                 Debug.Log("this thing has died");
                 PlayerAnim.ChangeState("Death");
@@ -168,8 +171,10 @@ public class PlayerStats : MonoBehaviour
     }
     private void RemoveForceOnGround()
     {
-        if (transform.position.y == 0)
+        if (transform.position.y <= 0.05)
         {
+
+            rb.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }

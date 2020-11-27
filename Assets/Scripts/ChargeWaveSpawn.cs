@@ -38,11 +38,25 @@ public class ChargeWaveSpawn : MonoBehaviour
         }
         else if (upPressed && sidePressed)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 45));
+            if (facingRight)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 45));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 135));
+            }
         }
         else if (!upPressed && sidePressed)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            if (facingRight)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+            }
         }
         else
         {

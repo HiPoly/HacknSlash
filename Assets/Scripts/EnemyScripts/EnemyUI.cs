@@ -9,6 +9,8 @@ public class EnemyUI : MonoBehaviour
     public Slider HealthSlider;
     [SerializeField]
     private GameObject BarContainer;
+    private float CurrentHealth;
+    private float MaxHealth;
 
     void Start()
     {
@@ -23,20 +25,21 @@ public class EnemyUI : MonoBehaviour
     }
     public void UpdateHealth()
     {
-        HealthSlider.value = GameObject.Find("Enemy").GetComponent<EnemyStats>().CurrentHealth;
+        HealthSlider.minValue = 0;
+        HealthSlider.value = Enemy.GetComponent<EnemyStats>().CurrentHealth;
+        HealthSlider.maxValue = Enemy.GetComponent<EnemyStats>().StartingHealth;
     }
     void VisOnHit()
     {
-        if (GameObject.Find("Enemy").GetComponent<EnemyStats>().CurrentHealth !=
-            GameObject.Find("Enemy").GetComponent<EnemyStats>().StartingHealth)
+        if (Enemy.GetComponent<EnemyStats>().CurrentHealth !=
+            Enemy.GetComponent<EnemyStats>().StartingHealth)
         {
             BarContainer.SetActive(true);
-
         }
     }
     void DisableOnDeath()
     {
-        if (GameObject.Find("Enemy").GetComponent<EnemyStats>().CurrentHealth <= 0)
+        if (Enemy.GetComponent<EnemyStats>().CurrentHealth <= 0)
         {
             BarContainer.SetActive(false);
         }

@@ -17,7 +17,10 @@ public class PlayerUI : MonoBehaviour
     }
 
     public void UpdateHealth(){
-        HealthSlider.value = GameObject.Find("Player").GetComponent<PlayerStats>().CurrentHealth;
+        HealthSlider.minValue = 0;
+        HealthSlider.value = Player.GetComponent<PlayerStats>().CurrentHealth;
+        HealthSlider.maxValue = Player.GetComponent<PlayerStats>().StartingHealth;
+
     }
     public void UpdateForce(){
         PowerSlider.value = GameObject.Find("Player").GetComponent<PlayerStats>().CurrentForce;

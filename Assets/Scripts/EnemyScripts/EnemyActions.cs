@@ -17,6 +17,7 @@ public class EnemyActions : MonoBehaviour
     private bool FollowPlayer, AttackPlayer;
     public float speed = 5f;
     public float AttackDistance = 1f;
+    [SerializeField] private float AggroDistance = 10f;
     public float ChasePlayerAfterAttack = 1f;
     private float CurrentAttackTime;
     private float DefaultAttackTime = 4f;
@@ -26,9 +27,9 @@ public class EnemyActions : MonoBehaviour
     //Attacking Hitbox and Size
     public Transform AttackPoint;
     [SerializeField] private float AttackRange = 0.1f;
+    
     public int AttackDamage = 30;
     public LayerMask EnemyLayers;
-
     //Max Clamped height, add dying if this height is reached
     [SerializeField] private float MaxHeight = 100f;
 
@@ -62,7 +63,7 @@ public class EnemyActions : MonoBehaviour
         ClampY();
         //Keep the enemy above world space Y: 0 and below the max-height
         CheckGrounded();
-        //Check if the player's rigidbody is at y: 0
+        //Check if the player's rigidbody is at approximately y: 0
     }
     private void FixedUpdate(){
         //Look at and move to attacking range of the player 
@@ -70,7 +71,7 @@ public class EnemyActions : MonoBehaviour
     }
     void CheckGrounded()
     {
-        if (transform.position.y == 0){
+        if (transform.position.y <= 0.05){
             Grounded = true;
         }
         else{
@@ -81,7 +82,8 @@ public class EnemyActions : MonoBehaviour
     {
         if (!FollowPlayer)
             return;
-        if (Vector3.Distance(transform.position, PlayerTarget.position) > AttackDistance && Grounded)
+        if (Vector3.Distance(transform.position, PlayerTarget.position) > AttackDistance
+        && (Vector3.Distance(transform.position, PlayerTarget.position) < AggroDistance && Grounded))
         {
             Vector3 PlayerPosition = new Vector3
                 (PlayerTarget.position.x, this.transform.position.y, PlayerTarget.position.z);

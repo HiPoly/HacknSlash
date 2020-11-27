@@ -2708,10 +2708,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.8
   AttackDistance: 1.5
+  AggroDistance: 4
   ChasePlayerAfterAttack: 1
   AttackPoint: {fileID: 2115779443}
   AttackRange: 0.1
-  AttackDamage: 30
+  AttackDamage: 20
   EnemyLayers:
     serializedVersion: 2
     m_Bits: 512

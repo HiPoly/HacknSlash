@@ -19,6 +19,7 @@ public class EnemyActions : MonoBehaviour
     public float AttackDistance = 1f;
     [SerializeField] private float AggroDistance = 10f;
     public float ChasePlayerAfterAttack = 1f;
+    [SerializeField]
     private float CurrentAttackTime;
     private float DefaultAttackTime = 4f;
     //Control hit windows and strikes through animation events
@@ -36,6 +37,8 @@ public class EnemyActions : MonoBehaviour
     [SerializeField]
     private GameObject CollisionBox;
     private Collider HitBox;
+
+    private List<PlayerStats> hitList = new List<PlayerStats>();
 
     void Awake()
     {
@@ -102,13 +105,19 @@ public class EnemyActions : MonoBehaviour
         }
     }
     //Animation Events that open the hit window and allow the Enemy to deal damage once per strike
-    void OpenHit(){
+    void OpenHit()
+    {
         AttackWindow = true;
-        Attacks = 1;
     }
-    void CloseHit(){
+    void CloseHit()
+    {
         AttackWindow = false;
-        Attacks = 0;
+        //Attacks = 0;
+        foreach (PlayerStats p in hitList)
+        {
+            p.BeenHit = false;
+        }
+        hitList.Clear();
     }
     void CheckHit()
     {
@@ -118,11 +127,15 @@ public class EnemyActions : MonoBehaviour
         {
             if (AttackWindow == true && Attacks > 0)
             {
-                Debug.Log("We hit Player");
-                if (player.GetComponent<PlayerStats>() != null)
-                {
-                    player.GetComponent<PlayerStats>().Hit(EnemyStats.CurrentDamage);
-                    Attacks = 0;
+                if (GetComponent<PlayerStats>().Blocking == true){
+                    EnemyAnim.Recoil();
+                    return;
+                }
+                if (player.GetComponent<PlayerStats>() != null){
+                    Debug.Log("We hit Player");
+                    PlayerStats p = player.GetComponent<PlayerStats>();
+                    hitList.Add(p);
+                    EnemyStats.CurrentForce += EnemyStats.ForcePerHit;
                 }
             }
         }

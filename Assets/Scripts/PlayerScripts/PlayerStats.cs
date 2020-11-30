@@ -54,6 +54,7 @@ public class PlayerStats : MonoBehaviour
     private float ParryTimer;
     [SerializeField] private float ParryTime;
     private bool CanParry = false;
+    public bool BeenHit;
 
     private void Awake()
     {
@@ -76,7 +77,7 @@ public class PlayerStats : MonoBehaviour
         CheckIState();
         //Checks whether animations that would make the player invulnerable are playing
         CheckParry();
-        //Add a timer once blocking starts to see if the player can still parry
+        //Add a timer once blocking starts to see if the player can still parry and whether they are blocking
         Grav();
         //Lerps back to standard value for gravity while the Player is not being hit
         RemoveForceOnGround();
@@ -96,25 +97,27 @@ public class PlayerStats : MonoBehaviour
                 PlayerAnim.ChangeState("Parry");
                 CurrentForce += ForcePerHit;
             }
-            GetComponent<EnemyAnim>().Recoil();
+            
+            //go to enemy actions and cause this if player is blocking
+            //GetComponent<EnemyAnim>().Recoil();
             return;
         }
-            ElapsedTime = 0;
-            CurrentGrav = LowGrav;
-            PlayerAnim.ChangeState("Hit");
-            CurrentHealth -= damage;
-            if (CurrentHealth > 0){
-                //Direct Translation Version
-                //rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
-                rb.AddForce(Vector3.up * EnemyStats.CurrentForce);
-            }
-            GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
-            if (CurrentHealth <= 0){
-                Debug.Log("this thing has died");
-                PlayerAnim.ChangeState("Death");
-                Alive = false;
-                GetComponent<Collider>().enabled = false;
-            }
+        ElapsedTime = 0;
+        CurrentGrav = LowGrav;
+        PlayerAnim.ChangeState("Hit");
+        CurrentHealth -= damage;
+        if (CurrentHealth > 0){
+            //Direct Translation Version
+            //rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
+            rb.AddForce(Vector3.up * EnemyStats.CurrentForce);
+        }
+        GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
+        if (CurrentHealth <= 0){
+            Debug.Log("this thing has died");
+            PlayerAnim.ChangeState("Death");
+            Alive = false;
+            GetComponent<Collider>().enabled = false;
+        }
     }
     void CheckBlock()
     {   //Set Animations
@@ -122,17 +125,16 @@ public class PlayerStats : MonoBehaviour
             PlayerAnim.ChangeState("Block");
             Blocking = true;
         }
-        else{
-            //PlayerAnim.ChangeState("Idle");
-            Blocking = false;
-        }
     }
+
     void CheckParry(){
         if (GetComponent<PlayerAnim>().currentState == "Block"){
+            Blocking = true;
             ParryTimer += Time.deltaTime;
         }
         else{
             ParryTimer = 0;
+            Blocking = false;
         }
         if (ParryTimer <= ParryTime){
             CanParry = true;

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class PlayerAnim : MonoBehaviour
 {   //
@@ -50,11 +51,13 @@ public class PlayerAnim : MonoBehaviour
 
         if (Priority >= currentPriority)
         {
-            if (blendTime > 0){
+            if (blendTime > 0)
+            {
                 //blend animation with specified time
                 anim.CrossFade(newState, blendTime);
             }
-            else{
+            else
+            {
                 //Play the animation
                 anim.Play(newState);
             }
@@ -89,7 +92,6 @@ public class PlayerAnim : MonoBehaviour
         return anim.GetCurrentAnimatorStateInfo(0).length >
             anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
     }
-
 
     //====================================================
     //All Animation Functions

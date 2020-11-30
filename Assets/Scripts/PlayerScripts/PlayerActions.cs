@@ -121,6 +121,10 @@ public class PlayerActions : MonoBehaviour
                 activateComboTimerToReset = true;
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
+                if (AttackWindow == true)
+                {
+                CloseHit();
+                }
                 if (CurrentComboState == BasicComboState.Basic1){
                     PlayerAnim.ChangeState("Basic1", 0.1f, 1);
                     Debug.Log("PlayingBasic1");
@@ -209,7 +213,6 @@ public class PlayerActions : MonoBehaviour
     //Animation Events that open the hit window and allow the player to deal damage once per strike
     void OpenHit(){
         AttackWindow = true;
-        //Attacks = 1;
     }
     void CloseHit(){
         AttackWindow = false;
@@ -228,14 +231,16 @@ public class PlayerActions : MonoBehaviour
         {
             if (AttackWindow == true)
             {
-                if (enemy.GetComponent<EnemyStats>() != null){
-                    Debug.Log("We hit " + enemy.name);
-                    EnemyStats e = enemy.GetComponent<EnemyStats>();
-
-                    e.Hit(PlayerStats.CurrentDamage);
-                    hitList.Add(e);
-                    PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
-                }
+                //if (GetComponent<EnemyStats>().Blocking == true){
+                //    PlayerAnim.ChangeState("Blocking");
+                //    return;
+            }
+            if (enemy.GetComponent<EnemyStats>() != null){
+                Debug.Log("We hit " + enemy.name);
+                EnemyStats e = enemy.GetComponent<EnemyStats>();
+                e.Hit(PlayerStats.CurrentDamage);
+                hitList.Add(e);
+                PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
             }
         }
     }

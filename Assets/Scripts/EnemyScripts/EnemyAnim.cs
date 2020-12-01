@@ -25,7 +25,6 @@ public class EnemyAnim : MonoBehaviour
         if (currentState == newState){
             return;
         }
-
         if (Priority >= currentPriority){
             if (blendTime > 0){
                 //blend animation with specified time

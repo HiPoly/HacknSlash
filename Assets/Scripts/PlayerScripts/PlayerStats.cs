@@ -35,7 +35,7 @@ public class PlayerStats : MonoBehaviour
     public float ForcePerHit = 20;
     private float ForceTimer;
     [SerializeField]
-    private float ForceDuration = 3;
+    private float ForceDuration = 1;
     //GravityVars
     private bool GravEnabled;
     private float ElapsedTime;
@@ -76,30 +76,27 @@ public class PlayerStats : MonoBehaviour
     void Update(){
         CheckIState();
         //Checks whether animations that would make the player invulnerable are playing
-        CheckParry();
-        //Add a timer once blocking starts to see if the player can still parry and whether they are blocking
         Grav();
         //Lerps back to standard value for gravity while the Player is not being hit
         RemoveForceOnGround();
         //Remove continuous downward force when supported by the ground
         LerpForce();
         //Force Decays at a constant rate while not attacking
+        CheckParry();
+        //Add a timer once blocking starts to see if the player can still parry and whether they are blocking
         CheckBlock();
         //Control Blocking Animation and set blocking bool
     }
     public void Hit(int damage){
-        if (CurrentIState == IStates.Dodging)
+        if (Dodging)
         {
             return;
         }
-        if (CurrentIState == IStates.Blocking){
+        if (Blocking){
             if (CanParry == true){
                 PlayerAnim.ChangeState("Parry");
                 CurrentForce += ForcePerHit;
             }
-            
-            //go to enemy actions and cause this if player is blocking
-            //GetComponent<EnemyAnim>().Recoil();
             return;
         }
         ElapsedTime = 0;
@@ -111,7 +108,7 @@ public class PlayerStats : MonoBehaviour
             //rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
             rb.AddForce(Vector3.up * EnemyStats.CurrentForce);
         }
-        GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
+        GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.1f);
         if (CurrentHealth <= 0){
             Debug.Log("this thing has died");
             PlayerAnim.ChangeState("Death");

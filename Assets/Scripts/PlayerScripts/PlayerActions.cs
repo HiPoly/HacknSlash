@@ -61,7 +61,9 @@ public class PlayerActions : MonoBehaviour
     public LayerMask EnemyLayers;
     //Max Clamped height
     [SerializeField] private float MaxHeight = 100f;
-    private List<EnemyStats> hitList = new List<EnemyStats>(); 
+    private List<EnemyStats> hitList = new List<EnemyStats>();
+
+    private int forceTick;
 
     private void Start(){
         CurrentComboTimer = DefaultComboTimer;
@@ -77,10 +79,10 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
-        CheckHit();
-        //Check if attack point is currently hitting an enemy
         CheckAttack();
         //Check inputs for special attacks and combos
+        CheckHit();
+        //Check if attack point is currently hitting an enemy
         CheckDodge();
         //Check inputs for dodge related actions
         ResetComboState();
@@ -121,10 +123,6 @@ public class PlayerActions : MonoBehaviour
                 activateComboTimerToReset = true;
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
-                if (AttackWindow == true)
-                {
-                CloseHit();
-                }
                 if (CurrentComboState == BasicComboState.Basic1){
                     PlayerAnim.ChangeState("Basic1", 0.1f, 1);
                     Debug.Log("PlayingBasic1");
@@ -162,57 +160,10 @@ public class PlayerActions : MonoBehaviour
             ChargeTracker = 0;
         }
     }
-    //Dodge and Slide Abilities
-    void CheckDodge()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {   // check if dodge sequence completed
-            if (CurrentDodgeState >= DodgeComboState.Dodge2){
-                return;
-            }
-            //Check for Special Inputs
-            else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
-                PlayerAnim.ChangeState("Slide", 0.1f, 1);
-                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
-                Debug.Log("I should be sliding");
-                return;
-            }
-            else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.ChangeState("Jump", 0, 1);
-                Debug.Log("I am Jumping");
-                return;
-            }
-            CurrentDodgeState++;
-            activateDodgeTimerToReset = true;
-            CurrentDodgeTimer = DefaultDodgeTimer;
-
-            if (CurrentDodgeState == DodgeComboState.Dodge1)
-            {
-                PlayerAnim.ChangeState("Dodge1", 0.1f, 1);
-                CurrentDodgeTimer = DefaultDodgeTimer;
-                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
-                Debug.Log("PlayingDodge1");
-                if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
-                {
-                    rb.AddForce(Vector3.right * Time.deltaTime * DodgeSpeed);
-                }
-            }
-            if (CurrentDodgeState == DodgeComboState.Dodge2)
-            {
-                PlayerAnim.ChangeState("Dodge2", 0.1f, 1);
-                CurrentDodgeTimer = DefaultDodgeTimer;
-                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
-                Debug.Log("PlayingDodge2");
-                if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2"))
-                {
-                    //addforce while dodging 
-                }
-            }
-        }
-    }
     //Animation Events that open the hit window and allow the player to deal damage once per strike
     void OpenHit(){
         AttackWindow = true;
+        forceTick = 1;
     }
     void CloseHit(){
         AttackWindow = false;
@@ -222,6 +173,7 @@ public class PlayerActions : MonoBehaviour
             e.BeenHit = false;
         }
         hitList.Clear();
+        forceTick = 0;
     }
     void CheckHit()
     {
@@ -231,16 +183,17 @@ public class PlayerActions : MonoBehaviour
         {
             if (AttackWindow == true)
             {
-                //if (GetComponent<EnemyStats>().Blocking == true){
-                //    PlayerAnim.ChangeState("Blocking");
-                //    return;
-            }
-            if (enemy.GetComponent<EnemyStats>() != null){
-                Debug.Log("We hit " + enemy.name);
-                EnemyStats e = enemy.GetComponent<EnemyStats>();
-                e.Hit(PlayerStats.CurrentDamage);
-                hitList.Add(e);
-                PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
+                if (enemy.GetComponent<EnemyStats>() != null)
+                {
+                    Debug.Log("We hit " + enemy.name);
+                    EnemyStats e = enemy.GetComponent<EnemyStats>();
+                    e.Hit(PlayerStats.CurrentDamage);
+                    hitList.Add(e);
+
+                    if (forceTick == 1){
+                    PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
+                        forceTick = 0; }
+                }
             }
         }
     }
@@ -294,6 +247,54 @@ public class PlayerActions : MonoBehaviour
         }
         else{
             Grounded = false;
+        }
+    }
+    //Dodge and Slide Abilities
+    void CheckDodge()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {   // check if dodge sequence completed
+            if (CurrentDodgeState >= DodgeComboState.Dodge2){
+                return;
+            }
+            //Check for Special Inputs
+            else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
+                PlayerAnim.ChangeState("Slide", 0.1f, 1);
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+                Debug.Log("I should be sliding");
+                return;
+            }
+            else if (Input.GetKey(KeyCode.W)){
+                PlayerAnim.ChangeState("Jump", 0, 1);
+                Debug.Log("I am Jumping");
+                return;
+            }
+            CurrentDodgeState++;
+            activateDodgeTimerToReset = true;
+            CurrentDodgeTimer = DefaultDodgeTimer;
+
+            if (CurrentDodgeState == DodgeComboState.Dodge1)
+            {
+                PlayerAnim.ChangeState("Dodge1", 0.1f, 1);
+                CurrentDodgeTimer = DefaultDodgeTimer;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+                Debug.Log("PlayingDodge1");
+                if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
+                {
+                    rb.AddForce(Vector3.right * Time.deltaTime * DodgeSpeed);
+                }
+            }
+            if (CurrentDodgeState == DodgeComboState.Dodge2)
+            {
+                PlayerAnim.ChangeState("Dodge2", 0.1f, 1);
+                CurrentDodgeTimer = DefaultDodgeTimer;
+                ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+                Debug.Log("PlayingDodge2");
+                if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2"))
+                {
+                    //addforce while dodging 
+                }
+            }
         }
     }
 }//class

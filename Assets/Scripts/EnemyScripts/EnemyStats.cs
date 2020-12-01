@@ -29,14 +29,21 @@ public class EnemyStats : MonoBehaviour
     private float GravLerpTime = 3;
     private float CurrentGrav;
     private float LowGrav = -0.25f;
-    private float MaxGrav = -3f;
+    private float MaxGrav = -5f;
     //IStateVars
     private bool Blocking;
     private bool HitPerAttack;
-
+    //AttackWindowCheck
     public bool BeenHit;
+    //ColourHit
+    Renderer rend;
+    public Material defaultMat;
+    public Material HitMat;
+    public float colourTime = 0.1f;
+
 
     void Start(){
+        rend = GetComponent<Renderer>();
         Alive = true;
         EnemyAnim = GetComponent<EnemyAnim>();
         anim = GetComponent<Animator>();
@@ -67,19 +74,26 @@ public class EnemyStats : MonoBehaviour
                 //Direct Translation Version
                 //rb.transform.position += Vector3.up * PlayerStats.CurrentForce * Time.deltaTime;
                 rb.AddForce(Vector3.up * PlayerStats.CurrentForce);
+                GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
             }
-            GameObject.Find("TimeLord").GetComponent<HitStop>().Stop(0.05f);
             if (CurrentHealth <= 0){
                 Debug.Log("this thing has died");
                 EnemyAnim.Death();
-                Alive = false;
                 GetComponent<EnemyActions>().Die();
+                Alive = false;
                 if (Grounded){
                     rb.velocity = Vector3.zero;
                 }
             }
         }
     }
+    IEnumerator HitColour()
+    {
+        rend.sharedMaterial = HitMat;
+        yield return new WaitForSecondsRealtime(colourTime);
+        rend.sharedMaterial = defaultMat;
+    }
+
     void Grav(){
         if (GravEnabled){
             if (ElapsedTime < GravLerpTime && transform.position.y != 0){
@@ -102,10 +116,10 @@ public class EnemyStats : MonoBehaviour
     }
     private void Goodnight(){
         if (!Alive){
-            if (transform.position.y <= 0){
+            if (transform.position.y <= 0.05){
                 rb.velocity = Vector3.zero;
                 GravEnabled = false;
-                GetComponent<Rigidbody>().isKinematic = true;
+                this.GetComponent<Rigidbody>().isKinematic = true;
                 this.enabled = false;
             }
         }

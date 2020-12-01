@@ -163,12 +163,19 @@ public class EnemyActions : MonoBehaviour
     {
         Vector3 ClampedPosition = transform.position;
         ClampedPosition.y = Mathf.Clamp(ClampedPosition.y, 0f, MaxHeight);
+       
         transform.position = ClampedPosition;
+        if (transform.position.y >= 99.95 && rb.velocity.y > 1)
+        {
+            Vector3 v = rb.velocity;
+            v.y = 0;
+            rb.velocity = v;
+        }
     }
     public void Die()
     {
         CollisionBox.SetActive(false);
-        HitBox.enabled = false;
+        this.HitBox.enabled = false;
         AttackPlayer = false;
         FollowPlayer = false;
         this.enabled = false;

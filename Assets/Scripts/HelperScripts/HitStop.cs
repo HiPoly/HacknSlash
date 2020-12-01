@@ -5,13 +5,13 @@ using UnityEngine;
 public class HitStop : MonoBehaviour
 {
     bool waiting;
+
     public void Stop(float duration)
     {
         if (waiting){ return; }
         Time.timeScale = 0.0f;
         StartCoroutine(Wait(duration));
     }
-
     IEnumerator Wait(float duration)
     {
         waiting = true;

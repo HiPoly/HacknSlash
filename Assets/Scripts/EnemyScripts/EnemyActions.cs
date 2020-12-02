@@ -35,7 +35,7 @@ public class EnemyActions : MonoBehaviour
     [SerializeField] private float MaxHeight = 100f;
 
     [SerializeField]
-    private GameObject CollisionBox;
+    private GameObject CollisionBox = null;
     private Collider HitBox;
 
     private List<PlayerStats> hitList = new List<PlayerStats>();
@@ -129,10 +129,10 @@ public class EnemyActions : MonoBehaviour
             {
                 if (GetComponent<PlayerStats>().Blocking == true){
                     EnemyAnim.Recoil();
+                    PlayerStats.CurrentForce += PlayerStats.ForcePerHit;
                     return;
                 }
                 if (player.GetComponent<PlayerStats>() != null){
-                    Debug.Log("We hit Player");
                     PlayerStats p = player.GetComponent<PlayerStats>();
                     hitList.Add(p);
                     EnemyStats.CurrentForce += EnemyStats.ForcePerHit;

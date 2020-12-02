@@ -11,9 +11,7 @@ public class MainMenu : MonoBehaviour
     private string FirstLevel;
 
     [SerializeField]
-    private string PracticeArena;
-
-
+    private string PracticeArena = null;
 
     // in menu pages/changes:
 

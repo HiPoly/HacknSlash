@@ -47,17 +47,14 @@ public class PlayerAnim : MonoBehaviour
     {
         //Stop the same animation from interrupting itself
         if (currentState == newState){
-            return; }
-
-        if (Priority >= currentPriority)
-        {
-            if (blendTime > 0)
-            {
+            return; 
+        }
+        if (Priority >= currentPriority){
+            if (blendTime > 0){
                 //blend animation with specified time
                 anim.CrossFade(newState, blendTime);
             }
-            else
-            {
+            else{
                 //Play the animation
                 anim.Play(newState);
             }
@@ -81,8 +78,7 @@ public class PlayerAnim : MonoBehaviour
         if (GetComponent<PlayerActions>().Acting == false
             && GetComponent<PlayerMovement>().Moving == false
             && GetComponent<PlayerStats>().Blocking == false
-            //&& transform.position.y == 0
-            )
+            && transform.position.y <= 0.05f)
         {
             ChangeState(AnimationTags.idle, 0.325f);
         }
@@ -96,6 +92,28 @@ public class PlayerAnim : MonoBehaviour
     //====================================================
     //All Animation Functions
     //====================================================
+
+    public void Block(bool Blocking)
+    {
+        if (Blocking == true){
+            anim.SetLayerWeight(1, 1f);
+        }
+        else if (Blocking == false){
+            anim.SetLayerWeight(1, 0f);
+        }
+    }
+    public void Move(int MoveState)
+    {
+        if (MoveState == 0){
+            //
+        }
+        else if (MoveState == 1){
+            ChangeState("Walk");
+        }
+        else if (MoveState == 2){
+            ChangeState("Run");
+        }
+    }
 
     //Movement Walking/Running/Crouching
     //public void Walk(bool moving) {

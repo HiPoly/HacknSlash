@@ -8,7 +8,7 @@ public class EnemyUI : MonoBehaviour
     public GameObject Enemy;
     public Slider HealthSlider;
     [SerializeField]
-    private GameObject BarContainer;
+    private GameObject BarContainer = null;
     private float CurrentHealth;
     private float MaxHealth;
 

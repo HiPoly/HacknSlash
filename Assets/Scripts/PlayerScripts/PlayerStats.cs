@@ -19,7 +19,7 @@ public class PlayerStats : MonoBehaviour
     private EnemyAnim EnemyAnim;
     private Animator anim;
     private Rigidbody rb;
-    private EnemyStats EnemyStats;
+    private EnemyStats EnemyStats = null;
     //Health & Damage
     public int StartingHealth = 200;
     public int CurrentHealth;
@@ -35,7 +35,7 @@ public class PlayerStats : MonoBehaviour
     public float ForcePerHit = 20;
     private float ForceTimer;
     [SerializeField]
-    private float ForceDuration = 1;
+    private float ForceDuration = 5;
     //GravityVars
     private bool GravEnabled;
     private float ElapsedTime;
@@ -45,14 +45,14 @@ public class PlayerStats : MonoBehaviour
     private float MaxGrav = -2f;
     //Code later with Istates, use dodge for now
     //IStateVars
-    public bool Blocking;
-    private bool Dodging;
-    private bool Sturdy;
-    private float SturdyPercent;
+    public bool Blocking = false;
+    private bool Dodging = false;
+    //private bool Sturdy = false;
+    //private float SturdyPercent = 0f;
     private bool Alive = true;
     //Parry vars
-    private float ParryTimer;
-    [SerializeField] private float ParryTime;
+    [SerializeField] private float ParryTimer;
+    [SerializeField] private float ParryTime = 1.0f;
     private bool CanParry = false;
     public bool BeenHit;
 
@@ -71,7 +71,6 @@ public class PlayerStats : MonoBehaviour
         CurrentDamage = StartingDamage;
         CurrentForce = StartingForce;
         CurrentGrav = MaxGrav;
-        ParryTime = 0.5f;
     }
     void Update(){
         CheckIState();
@@ -119,8 +118,12 @@ public class PlayerStats : MonoBehaviour
     void CheckBlock()
     {   //Set Animations
         if (Input.GetMouseButton(1)){
-            PlayerAnim.ChangeState("Block");
+            PlayerAnim.Block(Blocking = true);
             Blocking = true;
+        }
+        else{
+            PlayerAnim.Block(Blocking = false);
+            Blocking = false;
         }
     }
 

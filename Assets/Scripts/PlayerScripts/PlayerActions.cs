@@ -50,6 +50,7 @@ public class PlayerActions : MonoBehaviour
     GameObject ChargeWaveInstance;
     //Attacking Hitbox and Size
     public Transform AttackPoint;
+    private float defaultAttackSize = 0.2f;
     [SerializeField]
     private Transform AttackPointLeg = null;
     [SerializeField]
@@ -101,14 +102,14 @@ public class PlayerActions : MonoBehaviour
                 PlayerAnim.ChangeState("Sweep", 0, 1);
                 Debug.Log("I am performing SWEEP");
                 AttackPoint = AttackPointBlade;
-                AttackRange = 0.1f;
+                AttackRange = defaultAttackSize;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Sweep
             else if (Input.GetKey(KeyCode.W)){
                 PlayerAnim.ChangeState("Hold", 0, 1); ;
                 Debug.Log("I am performing HOLD");
                 AttackPoint = AttackPointLeg;
-                AttackRange = 0.1f;
+                AttackRange = defaultAttackSize + 0.1f;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Air-Hold
             else if (Input.GetKey(KeyCode.S) && (!Grounded)){
@@ -185,7 +186,6 @@ public class PlayerActions : MonoBehaviour
             {
                 if (enemy.GetComponent<EnemyStats>() != null)
                 {
-                    Debug.Log("We hit " + enemy.name);
                     EnemyStats e = enemy.GetComponent<EnemyStats>();
                     e.Hit(PlayerStats.CurrentDamage);
                     hitList.Add(e);
@@ -266,6 +266,11 @@ public class PlayerActions : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.W)){
                 PlayerAnim.ChangeState("Jump", 0, 1);
+                rb.velocity = new Vector3
+                (rb.velocity.x,
+                 Input.GetAxisRaw(Axis.horizontalaxis) * (100f * Time.deltaTime),
+                 rb.velocity.z
+                );
                 Debug.Log("I am Jumping");
                 return;
             }
@@ -281,7 +286,12 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("PlayingDodge1");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge1"))
                 {
-                    rb.AddForce(Vector3.right * Time.deltaTime * DodgeSpeed);
+                    if (transform.rotation.y > 0){
+                    rb.AddForce(Vector3.right * DodgeSpeed);
+                    }
+                    else{
+                    rb.AddForce(Vector3.left * DodgeSpeed);
+                    }
                 }
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
@@ -292,7 +302,12 @@ public class PlayerActions : MonoBehaviour
                 Debug.Log("PlayingDodge2");
                 if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Dodge2"))
                 {
-                    //addforce while dodging 
+                    if (transform.rotation.y > 0){
+                        rb.AddForce(Vector3.right * DodgeSpeed);
+                    }
+                    else{
+                        rb.AddForce(Vector3.left * DodgeSpeed);
+                    }
                 }
             }
         }

@@ -9,40 +9,25 @@ public class PauseMenu : MonoBehaviour
     [SerializeField]
     private GameObject thePauseMenu;
     [SerializeField]
-    private KeyCode PauseTheGame;
-
+    private KeyCode PauseTheGame = KeyCode.F1;
     private bool GameIsPaused;
 
-
     //scene Loading variables
-
     [SerializeField]
     private string TitleScene;
-
     //moves list Game Object
-
     [SerializeField]
-    private GameObject MovesList;
-
+    private GameObject MovesList = null;
     [SerializeField]
-    private GameObject Buttons;
+    private GameObject Buttons = null;
     
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Start(){
         Time.timeScale = 1;
     }
-
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update(){
         if (Input.GetKeyDown(PauseTheGame))
         {
-
             if (GameIsPaused)
             {
                 PauseMenuOff();
@@ -51,8 +36,6 @@ public class PauseMenu : MonoBehaviour
             {
                 PauseMenuOn();
             }
-
-
         }
 
     }

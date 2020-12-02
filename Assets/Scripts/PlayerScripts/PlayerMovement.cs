@@ -80,11 +80,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Running) 
             {
-                PlayerAnim.ChangeState(AnimationTags.run, 0.2f);
+                PlayerAnim.Move(2);
             }
             else 
-            {                    
-                PlayerAnim.ChangeState(AnimationTags.walk, 0.1f);
+            {
+                PlayerAnim.Move(1);
             }
             Moving = true;
         }
@@ -94,11 +94,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Running)
             {
-                PlayerAnim.ChangeState(AnimationTags.run, 0.2f);
+                PlayerAnim.Move(2);
             }
             else
             {
-                PlayerAnim.ChangeState(AnimationTags.walk, 0.1f);
+                PlayerAnim.Move(1);
             }
             Moving = true;
         }

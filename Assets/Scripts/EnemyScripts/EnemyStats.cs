@@ -17,7 +17,7 @@ public class EnemyStats : MonoBehaviour
     public int StartingHealth = 100;
     public int CurrentHealth;
     [SerializeField] 
-    private int StartingDamage;
+    private int StartingDamage = 0;
     public int CurrentDamage = 20;
     [SerializeField]
     private int StartingForce;

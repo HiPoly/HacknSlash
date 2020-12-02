@@ -28,14 +28,10 @@ public class InputLogger : MonoBehaviour
 
     void Update()
     {
-        
         LogInputs();
         UpdateValues();
         //UpdateUI();
-
         //need something to remove expired or excess inputs aswell
-
-
 
         //check if list length is greater than x then reduce to correct size from back end.
         ListLength = InputList.Count;
@@ -45,7 +41,6 @@ public class InputLogger : MonoBehaviour
         }
         //check if input has been listed for a long period of time and remove expired values.
     }
-
     void LogInputs()
     {
         if (Input.GetKeyDown(KeyCode.Space)) {

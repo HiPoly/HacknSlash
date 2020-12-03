@@ -92,6 +92,8 @@ public class PlayerActions : MonoBehaviour
         //Check if the player's rigidbody is at y: 0
         ClampY();
         //clamps the y position to >= 0
+        RemoveForceOnGround();
+        //removes excess downward force when touching the ground
     }
     void CheckAttack()
     {
@@ -120,6 +122,9 @@ public class PlayerActions : MonoBehaviour
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Bounce
             if (Grounded){
+                if (AttackWindow == true){
+                    AttackWindow = false;
+                }
                 CurrentComboState++;
                 activateComboTimerToReset = true;
                 AttackPoint = AttackPointBlade;
@@ -241,6 +246,15 @@ public class PlayerActions : MonoBehaviour
         ClampedPosition.y = Mathf.Clamp(ClampedPosition.y, 0f, MaxHeight);
         transform.position = ClampedPosition;
     }
+    private void RemoveForceOnGround()
+    {
+        if (transform.position.y <= 0.05 && rb.velocity.y < 0)
+        {
+            rb.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
     void CheckGrounded(){
         if (rb.transform.position.y == 0){
             Grounded = true;
@@ -266,11 +280,11 @@ public class PlayerActions : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.W)){
                 PlayerAnim.ChangeState("Jump", 0, 1);
-                rb.velocity = new Vector3
-                (rb.velocity.x,
-                 Input.GetAxisRaw(Axis.horizontalaxis) * (100f * Time.deltaTime),
-                 rb.velocity.z
-                );
+                //rb.velocity = new Vector3
+                //(rb.velocity.x,
+                // Input.GetAxisRaw(Axis.horizontalaxis) * (100f * Time.deltaTime),
+                // rb.velocity.z
+                //);
                 Debug.Log("I am Jumping");
                 return;
             }

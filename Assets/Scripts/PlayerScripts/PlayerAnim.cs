@@ -75,10 +75,11 @@ public class PlayerAnim : MonoBehaviour
     }
     void CheckIdle()
     {
-        if (GetComponent<PlayerActions>().Acting == false
-            && GetComponent<PlayerMovement>().Moving == false
-            && GetComponent<PlayerStats>().Blocking == false
-            && transform.position.y <= 0.05f)
+        //if (GetComponent<PlayerActions>().Acting == false
+        //    && GetComponent<PlayerMovement>().Moving == false
+        //    && GetComponent<PlayerStats>().Blocking == false
+        //    && transform.position.y <= 0.05f)
+        if (animIsPlaying() == false)
         {
             ChangeState(AnimationTags.idle, 0.325f);
         }

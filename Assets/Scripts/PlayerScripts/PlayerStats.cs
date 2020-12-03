@@ -35,7 +35,7 @@ public class PlayerStats : MonoBehaviour
     public float ForcePerHit = 20;
     private float ForceTimer;
     [SerializeField]
-    private float ForceDuration = 5;
+    private float ForceDuration = 10;
     //GravityVars
     private bool GravEnabled;
     private float ElapsedTime;
@@ -60,8 +60,7 @@ public class PlayerStats : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
-    void Start()
-    {
+    void Start(){
         PlayerAnim = GetComponent<PlayerAnim>();
         //EnemyAnim = GameObject.Find("Enemy").GetComponent<EnemyAnim>();
         //EnemyStats = GameObject.Find("Enemy").GetComponent<EnemyStats>();
@@ -77,8 +76,6 @@ public class PlayerStats : MonoBehaviour
         //Checks whether animations that would make the player invulnerable are playing
         Grav();
         //Lerps back to standard value for gravity while the Player is not being hit
-        RemoveForceOnGround();
-        //Remove continuous downward force when supported by the ground
         LerpForce();
         //Force Decays at a constant rate while not attacking
         CheckParry();
@@ -87,8 +84,7 @@ public class PlayerStats : MonoBehaviour
         //Control Blocking Animation and set blocking bool
     }
     public void Hit(int damage){
-        if (Dodging)
-        {
+        if (Dodging){
             return;
         }
         if (Blocking){
@@ -166,19 +162,9 @@ public class PlayerStats : MonoBehaviour
                 CurrentGrav = Mathf.Lerp(CurrentGrav, MaxGrav, ElapsedTime / GravLerpTime);
                 ElapsedTime += Time.deltaTime;
             }
-            if (transform.position.y != 0){
+            if (transform.position.y > 0.05f){
                 rb.AddForce(0, CurrentGrav, 0, ForceMode.Force);
             }
-        }
-    }
-    private void RemoveForceOnGround()
-    {
-        if (transform.position.y <= 0.05)
-        {
-
-            rb.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
         }
     }
     void LerpForce()

@@ -174,7 +174,7 @@ public class EnemyActions : MonoBehaviour
     }
     public void Die()
     {
-        CollisionBox.SetActive(false);
+        this.CollisionBox.SetActive(false);
         this.HitBox.enabled = false;
         AttackPlayer = false;
         FollowPlayer = false;

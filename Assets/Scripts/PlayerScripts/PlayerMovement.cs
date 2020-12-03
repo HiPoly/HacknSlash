@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody playerBody;
     private Animator anim;
     public float walkSpeed = 100f;
+    private float RunMultiplier;
     private float rotationY = -90;
     [SerializeField]
     private GameObject CollisionBox;
@@ -35,22 +36,17 @@ public class PlayerMovement : MonoBehaviour
     void DetectMovement()
     {
         if (Input.GetAxisRaw(Axis.verticalaxis) >= 0)
-        {   //Require animation to be playing to add force
-            //if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Walk"))
-            {
-            playerBody.velocity = new Vector3
-                (Input.GetAxisRaw(Axis.horizontalaxis) * (walkSpeed * Time.deltaTime),
-                 playerBody.velocity.y,
-                 playerBody.velocity.z);
+        {
+            if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Run")){
+                RunMultiplier = 2.0f;
             }
-            //Increase force by multiplier while run animation is playing
-            if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
-            {
-            playerBody.velocity = new Vector3
-                (Input.GetAxisRaw(Axis.horizontalaxis) * (1.5f * walkSpeed * Time.deltaTime),
-                 playerBody.velocity.y,
-                 playerBody.velocity.z);
+            else{
+                RunMultiplier = 1.0f;
             }
+            playerBody.velocity = new Vector3
+            (Input.GetAxisRaw(Axis.horizontalaxis) * (RunMultiplier * walkSpeed * Time.deltaTime),
+             playerBody.velocity.y,
+             playerBody.velocity.z);
         }
     }
     void RotatePlayer()

@@ -7,14 +7,14 @@ public class PauseMenu : MonoBehaviour
 {
     //pause menu direct things
     [SerializeField]
-    private GameObject thePauseMenu;
+    private GameObject thePauseMenu = null;
     [SerializeField]
     private KeyCode PauseTheGame = KeyCode.F1;
     private bool GameIsPaused;
 
     //scene Loading variables
     [SerializeField]
-    private string TitleScene;
+    private string TitleScene = "";
     //moves list Game Object
     [SerializeField]
     private GameObject MovesList = null;

@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float RunMultiplier;
     private float rotationY = -90;
     [SerializeField]
-    private GameObject CollisionBox;
+    private GameObject CollisionBox = null;
     public bool Moving;
     private bool Running;
 

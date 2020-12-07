@@ -6,7 +6,7 @@ public class LerpUI : MonoBehaviour
 {
     public GameObject UITarget;
     private Vector3 Target; 
-    [SerializeField] private float speed;
+    [SerializeField] private float speed = 0;
     private float duration = 2f;
 
     void Start()

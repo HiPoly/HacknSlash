@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyStats : MonoBehaviour
 {
     //Misc
-    private bool Grounded;
+    private bool Grounded = true;
     private bool Alive = true;
     //Fetched Components
     private EnemyAnim EnemyAnim;

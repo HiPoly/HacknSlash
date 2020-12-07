@@ -5,76 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-
     //Level Variables
     [SerializeField]
-    private string FirstLevel;
-
+    private string FirstLevel = null;
     [SerializeField]
     private string PracticeArena = null;
 
     // in menu pages/changes:
-
     [SerializeField]
-    private GameObject Menu;
-
+    private GameObject Menu = null;
     [SerializeField]
-    private GameObject SettingsMenu;
-
+    private GameObject SettingsMenu = null;
     [SerializeField]
-    private GameObject QuitPrompt;
-
-
-
-
-
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    private GameObject QuitPrompt = null;
 
     //Start the Game things:
-
-    public void StartGame()
-    {
+    public void StartGame(){
         SceneManager.LoadScene(FirstLevel);
     }
 
-
-
-
     //Go to: practice Area
-
-    public void PracticeArea()
-    {
+    public void PracticeArea(){
         SceneManager.LoadScene(PracticeArena);
     }
 
-
-
     //Settings Menus:
-
     //turn Settings menu on
-    public void SettingsOn()
-    {
+    public void SettingsOn(){
         SettingsMenu.SetActive(true);
         Menu.SetActive(false);
     }
-
     //turn settings menu off
-    public void SettingsOff()
-    {
+    public void SettingsOff(){
         SettingsMenu.SetActive(false);
         Menu.SetActive(true);
     }

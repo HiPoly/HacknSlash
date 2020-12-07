@@ -27,8 +27,7 @@ public class PlayerStats : MonoBehaviour
     private int StartingDamage = 20 ;
     public int CurrentDamage = 20;
     //ForceVars
-    [SerializeField]
-    private float StartingForce;
+    private float StartingForce = 0;
     [SerializeField]
     private float ForceCap;
     public float CurrentForce;
@@ -154,6 +153,13 @@ public class PlayerStats : MonoBehaviour
         }
         else{
             CurrentIState = IStates.None;
+        }
+    }
+
+    void IStateEffects()
+    {
+        if (CurrentIState == IStates.Blocking){
+
         }
     }
     void Grav(){

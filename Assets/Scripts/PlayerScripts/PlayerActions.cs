@@ -21,8 +21,8 @@ public class PlayerActions : MonoBehaviour
     public bool Acting;
     //Fetched Components
         //Scripts
-        [SerializeField] private PlayerAnim PlayerAnim;
-        [SerializeField] private PlayerStats PlayerStats;
+        [SerializeField] private PlayerAnim PlayerAnim = null;
+        [SerializeField] private PlayerStats PlayerStats = null;
     private EnemyStats EnemyStats;
     private Animator anim;
     private Rigidbody rb;
@@ -39,13 +39,13 @@ public class PlayerActions : MonoBehaviour
     private BasicComboState CurrentComboState;
     private DodgeComboState CurrentDodgeState;
     //DashVars
-    [SerializeField] private float DodgeSpeed;
+    [SerializeField] private float DodgeSpeed = 0;
     //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
     //Tracking Charge Attack Requirements
-    private int ChargeTracker;
-    [SerializeField] private int ChargeReady;
-    [SerializeField] private Transform ChargeWaveSpawn;
+    [SerializeField] private int ChargeTracker = 0;
+    [SerializeField] private int ChargeReady = 0;
+    [SerializeField] private Transform ChargeWaveSpawn = null;
     public GameObject ChargeWavePrefab;
     GameObject ChargeWaveInstance;
     //Attacking Hitbox and Size
@@ -154,7 +154,7 @@ public class PlayerActions : MonoBehaviour
             ChargeTracker = ChargeTracker + 1;
         }
     if (ChargeTracker >= ChargeReady) {
-            PlayerAnim.ChangeState("ChargeHold");
+            PlayerAnim.ChangeState("ChargeHold", 0.1f, 1);
         }
     if (Input.GetMouseButtonUp(0) && ChargeTracker >= ChargeReady){
             ChargeTracker = 0;

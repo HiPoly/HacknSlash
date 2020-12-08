@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     //Level Variables
     [SerializeField]
-    private string FirstLevel = null;
+    private int FirstLevel;
     [SerializeField]
     private string PracticeArena = null;
 

@@ -43,8 +43,8 @@ public class PlayerActions : MonoBehaviour
     //Control hit windows and strikes through animation events
     private bool AttackWindow = false;
     //Tracking Charge Attack Requirements
-    [SerializeField] private int ChargeTracker = 0;
-    [SerializeField] private int ChargeReady = 0;
+    [SerializeField] private float ChargeTracker = 0;
+    [SerializeField] private float ChargeReady = 0.8f;
     [SerializeField] private Transform ChargeWaveSpawn = null;
     public GameObject ChargeWavePrefab;
     GameObject ChargeWaveInstance;
@@ -101,21 +101,21 @@ public class PlayerActions : MonoBehaviour
         {
             //SpecialMoveCheck
             if (Input.GetKey(KeyCode.S) && (Input.GetAxisRaw(Axis.verticalaxis) < 0)){
-                PlayerAnim.ChangeState("Sweep", 0, 1);
+                PlayerAnim.ChangeState("Sweep", 0, 10);
                 Debug.Log("I am performing SWEEP");
                 AttackPoint = AttackPointBlade;
                 AttackRange = defaultAttackSize;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Sweep
             else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.ChangeState("Hold", 0, 1); ;
+                PlayerAnim.ChangeState("Hold", 0, 10); ;
                 Debug.Log("I am performing HOLD");
                 AttackPoint = AttackPointLeg;
                 AttackRange = defaultAttackSize + 0.1f;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 return; }//Air-Hold
             else if (Input.GetKey(KeyCode.S) && (!Grounded)){
-                PlayerAnim.ChangeState("Bounce", 0, 1); ;
+                PlayerAnim.ChangeState("Bounce", 0, 10); ;
                 Debug.Log("I am performing BOUNCE");
                 AttackPoint = AttackPointAoE;
                 AttackRange = 0.65f;
@@ -130,19 +130,19 @@ public class PlayerActions : MonoBehaviour
                 AttackPoint = AttackPointBlade;
                 AttackRange = 0.1f;
                 if (CurrentComboState == BasicComboState.Basic1){
-                    PlayerAnim.ChangeState("Basic1", 0.1f, 1);
+                    PlayerAnim.ChangeState("Basic1", 0.1f, 10);
                     Debug.Log("PlayingBasic1");
                     CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                     ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
                 else if (CurrentComboState == BasicComboState.Basic2){
-                    PlayerAnim.ChangeState("Basic2", 0.1f, 1);
+                    PlayerAnim.ChangeState("Basic2", 0.1f, 10);
                     Debug.Log("PlayingBasic2");
                     CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                     ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 }
                 else if (CurrentComboState == BasicComboState.Basic3){
-                    PlayerAnim.ChangeState("Basic3", 0.1f, 1);
+                    PlayerAnim.ChangeState("Basic3", 0.1f, 10);
                     Debug.Log("PlayingBasic3");
                     CurrentComboTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                     ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
@@ -151,16 +151,18 @@ public class PlayerActions : MonoBehaviour
         }
     //ChargeAttackCheck
     if (Input.GetMouseButton(0)) {
-            ChargeTracker = ChargeTracker + 1;
+            ChargeTracker += Time.deltaTime;
         }
     if (ChargeTracker >= ChargeReady) {
-            PlayerAnim.ChangeState("ChargeHold", 0.1f, 1);
+            PlayerAnim.ChangeState("ChargeHold", 0.1f, 10);
+            Debug.Log("I am playing chargehold");
         }
     if (Input.GetMouseButtonUp(0) && ChargeTracker >= ChargeReady){
-            ChargeTracker = 0;
-            PlayerAnim.ChangeState("ChargeRelease");
+            PlayerAnim.ChangeState("ChargeRelease", 0.1f, 10);
             Instantiate(ChargeWavePrefab, ChargeWaveSpawn.position, ChargeWaveSpawn.rotation);
             ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
+            ChargeTracker = 0;
+            Debug.Log("I am playing chargerelease");
         }
     else if (Input.GetMouseButtonUp(0) && ChargeTracker < ChargeReady){
             ChargeTracker = 0;
@@ -273,13 +275,13 @@ public class PlayerActions : MonoBehaviour
             }
             //Check for Special Inputs
             else if (Input.GetKey(KeyCode.S) && (Input.GetAxis(Axis.horizontalaxis) != 0)){
-                PlayerAnim.ChangeState("Slide", 0.1f, 1);
+                PlayerAnim.ChangeState("Slide", 0.1f, 10);
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 Debug.Log("I should be sliding");
                 return;
             }
             else if (Input.GetKey(KeyCode.W)){
-                PlayerAnim.ChangeState("Jump", 0, 1);
+                PlayerAnim.ChangeState("Jump", 0, 10);
                 //rb.velocity = new Vector3
                 //(rb.velocity.x,
                 // Input.GetAxisRaw(Axis.horizontalaxis) * (100f * Time.deltaTime),
@@ -294,7 +296,7 @@ public class PlayerActions : MonoBehaviour
 
             if (CurrentDodgeState == DodgeComboState.Dodge1)
             {
-                PlayerAnim.ChangeState("Dodge1", 0.1f, 1);
+                PlayerAnim.ChangeState("Dodge1", 0.1f, 10);
                 CurrentDodgeTimer = DefaultDodgeTimer;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 Debug.Log("PlayingDodge1");
@@ -310,7 +312,7 @@ public class PlayerActions : MonoBehaviour
             }
             if (CurrentDodgeState == DodgeComboState.Dodge2)
             {
-                PlayerAnim.ChangeState("Dodge2", 0.1f, 1);
+                PlayerAnim.ChangeState("Dodge2", 0.1f, 10);
                 CurrentDodgeTimer = DefaultDodgeTimer;
                 ActionTimer = anim.GetCurrentAnimatorStateInfo(0).length;
                 Debug.Log("PlayingDodge2");

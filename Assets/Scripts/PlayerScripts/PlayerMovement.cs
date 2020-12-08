@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.S) && transform.position.y == 0)
         {
-            PlayerAnim.ChangeState(AnimationTags.crouch, 0.1f);
+            PlayerAnim.ChangeState(AnimationTags.crouch, 0.1f, 1);
             Moving = true;
         }
     }

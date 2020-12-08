@@ -52,11 +52,15 @@ public class PlayerAnim : MonoBehaviour
         if (Priority >= currentPriority){
             if (blendTime > 0){
                 //blend animation with specified time
-                anim.CrossFade(newState, blendTime);
+                anim.CrossFade(newState, blendTime, 0);
+                currentState = newState;
+                currentPriority = Priority;
             }
             else{
                 //Play the animation
                 anim.Play(newState);
+                currentState = newState;
+                currentPriority = Priority;
             }
         }
         //If priority animations are finished playing reset priority to neutral
@@ -64,14 +68,12 @@ public class PlayerAnim : MonoBehaviour
             currentPriority = 0;
         }
         //Reassign the current state and priority
-        currentState = newState;
-        currentPriority = Priority;
+        
     }
     private void Update()
     {
         CheckIdle();
         //Checks if the player is moving or attacking and can transition to idle
-        animIsPlaying();
     }
     void CheckIdle()
     {
@@ -81,13 +83,19 @@ public class PlayerAnim : MonoBehaviour
         //    && transform.position.y <= 0.05f)
         if (animIsPlaying() == false)
         {
-            ChangeState(AnimationTags.idle, 0.325f);
+            ChangeState(AnimationTags.idle, 0.325f, 0);
         }
     }
     bool animIsPlaying()
     {
-        return anim.GetCurrentAnimatorStateInfo(0).length >
-            anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime < anim.GetCurrentAnimatorStateInfo(0).length)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //====================================================
@@ -109,10 +117,10 @@ public class PlayerAnim : MonoBehaviour
             //
         }
         else if (MoveState == 1){
-            ChangeState("Walk");
+            ChangeState("Walk", 0.1f, 1);
         }
         else if (MoveState == 2){
-            ChangeState("Run");
+            ChangeState("Run", 0.1f, 1);
         }
     }
 

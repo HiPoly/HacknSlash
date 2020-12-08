@@ -36,6 +36,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private float ForceDuration = 10;
     //GravityVars
+    [SerializeField]
     private bool GravEnabled;
     private float ElapsedTime;
     private float GravLerpTime = 3;

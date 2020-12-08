@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7608974475218493603}
   - component: {fileID: 2233125656010667669}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ButtonPause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6261491009914846129
 RectTransform:
   m_ObjectHideFlags: 0

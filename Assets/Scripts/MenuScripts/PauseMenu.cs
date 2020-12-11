@@ -14,7 +14,7 @@ public class PauseMenu : MonoBehaviour
 
     //scene Loading variables
     [SerializeField]
-    private string TitleScene;
+    private int TitleScene;
     //moves list Game Object
     [SerializeField]
     private GameObject MovesList = null;
